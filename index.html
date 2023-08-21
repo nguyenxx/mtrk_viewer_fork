@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>MTRK Web</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    </head>
+    <body>
+
+        <div class ="container">
+            <div id="chart1"></div>
+        </div>
+
+        
+
+        <script type="module">
+
+            import data from "./miniflash.json" assert { type: 'json' };
+            
+            const rf_pulse_data = data["arrays"]["rfpulse"]["data"]
+            const rf_odd_data = []
+            const rf_even_data = []
+            for (let i=0; i < 128; i++) {
+                rf_even_data.push(rf_pulse_data[2*i]);
+                rf_odd_data.push(rf_pulse_data[2*i+1])
+            }
+
+            const rf_data = Array(2000).fill(0);
+            const slice_data = Array(2000).fill(0);
+            const phase_data = Array(2000).fill(0);
+            const readout_data = Array(2000).fill(0);
+
+            // Filling rf data
+            let t = 10;
+            for (let i=0; i<rf_even_data.length; i++) {
+                rf_data[t] = rf_even_data[i];
+                t++;
+            }
+
+            // Filling slice axis
+            const grad_slice_select_data =  data["arrays"]["grad_100_2660_100"]["data"].map(function(x) { return x * -4.95; });
+            t = 0;
+            for (let i=0; i<grad_slice_select_data.length; i++) {
+                slice_data[t] = grad_slice_select_data[i];
+                t++;
+            }
+
+            const grad_slice_refocus_data =  data["arrays"]["grad_220_80_220"]["data"].map(function(x) { return x * 21.96; });
+            t = 276;
+            for (let i=0; i<grad_slice_refocus_data.length; i++) {
+                slice_data[t] = grad_slice_refocus_data[i];
+                t++;
+            }
+
+            const grad_slice_refocus_flip_data =  grad_slice_refocus_data.map(function(x) { return x * -1; });
+            t = 1330;
+            for (let i=0; i<grad_slice_refocus_flip_data.length; i++) {
+                slice_data[t] = grad_slice_refocus_flip_data[i];
+                t++;
+            }
+
+            // Filling phase axis
+            const grad_phase_encode_data =  data["arrays"]["grad_220_10_220"]["data"].map(function(x) { return x * -0.3378125*(1-64.5); });
+            t = 266;
+            for (let i=0; i<grad_phase_encode_data.length; i++) {
+                phase_data[t] = grad_phase_encode_data[i];
+                t++;
+            }
+            
+            const grad_phase_encode_flip_data =  grad_phase_encode_data.map(function(x) { return x * -1; });
+            t = 1330;
+            for (let i=0; i<grad_phase_encode_flip_data.length; i++) {
+                phase_data[t] = grad_phase_encode_flip_data[i];
+                t++;
+            }
+
+            // Filling readout axis
+            const grad_read_dephase_data =  data["arrays"]["grad_220_10_220"]["data"].map(function(x) { return x * 21.96; });
+            t = 266;
+            for (let i=0; i<grad_read_dephase_data.length; i++) {
+                readout_data[t] = grad_read_dephase_data[i];
+                t++;
+            }
+
+            const grad_read_readout_data =  data["arrays"]["grad_30_3840_30"]["data"].map(function(x) { return x * -2.61; });
+            t = 943;
+            for (let i=0; i<grad_read_readout_data.length; i++) {
+                readout_data[t] = grad_read_readout_data[i];
+                t++;
+            }
+            
+
+            // Taking standard x-axis for all the plots.
+            const x_standard = []
+            for (let i=0; i<20000; i+=10) {
+                x_standard.push(i);
+            }
+
+            const plot_rf_data = {
+            x: x_standard,
+            y: rf_data,
+            xaxis: 'x1',
+            yaxis: 'y1',
+            type: 'scatter',
+            mode: 'lines+markers',
+            marker: { size: 6 },
+            name: 'rf pulse'
+            // line: { color: 'steelblue' }
+            };
+
+            const plot_slice_data = {
+            x: x_standard,
+            y: slice_data,
+            xaxis: 'x2',
+            yaxis: 'y2',
+            type: 'scatter',
+            mode: 'lines+markers',
+            name: 'slice',
+            marker: { size: 6 },
+            // line: { color: 'steelblue' }
+            };
+
+            const plot_phase_data = {
+            x: x_standard,
+            y: phase_data,
+            xaxis: 'x3',
+            yaxis: 'y3',
+            type: 'scatter',
+            mode: 'lines+markers',
+            name: 'phase',
+            marker: { size: 6 },
+            // line: { color: 'steelblue' }
+            };
+
+            const plot_readout_data = {
+            x: x_standard,
+            y: readout_data,
+            xaxis: 'x4',
+            yaxis: 'y4',
+            type: 'scatter',
+            mode: 'lines+markers',
+            name: 'readout',
+            marker: { size: 6 },
+            // line: { color: 'steelblue' }
+            };
+
+            var stacked_plots = [plot_rf_data, plot_slice_data, plot_phase_data, plot_readout_data];
+
+            var layout = {
+            grid: {
+                rows: 4,
+                columns: 1,
+                pattern: 'independent'},
+            height: 1000,
+            };
+
+            Plotly.newPlot('chart1', stacked_plots, layout);
+
+        </script>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+    </body>
+</html>
