@@ -44,7 +44,7 @@
 
             // Executing each step and filling axis arrays.
             steps.forEach(function (item, index) {
-                if(item["axis"] == "slice") {
+                if(item["axis"] == "slice" || item["axis"] == "phase" || item["axis"] == "read") {
                     let start = item["time"]/10;
                     let object = item["object"];
                     let amplitude = parseInt(data["objects"][object]["amplitude"]);
@@ -64,58 +64,16 @@
                     let array_data = data["arrays"][array_name]["data"].map(function(x) { return x * -amplitude});
 
                     for (let i=0; i<array_data.length; i++) {
-                        slice_data[start] = array_data[i];
+                        if (item["axis"] == "slice") { 
+                            slice_data[start] = array_data[i]; 
+                        } else if (item["axis"] == "phase") { 
+                            phase_data[start] = array_data[i]; 
+                        } else if (item["axis"] == "read") { 
+                            readout_data[start] = array_data[i];
+                        }
                         start++;
                     }
-
-                } else if(item["axis"] == "phase") {
-                    let start = item["time"]/10;
-                    let object = item["object"];
-                    let amplitude = parseInt(data["objects"][object]["amplitude"]);
-                    
-                    // Updating the amplitude if available in the step.
-                    if ("amplitude" in item) {
-                        if (item["amplitude"] === "flip") {
-                            amplitude = amplitude * -1;
-                        }
-                        else if ("equation" in item["amplitude"]) {
-                            amplitude = 0.3378125*(1-64.5);
-                            data["objects"][object]["amplitude"] = amplitude;
-                        }
-                    }
-
-                    let array_name = data["objects"][object]["array"];
-                    let array_data = data["arrays"][array_name]["data"].map(function(x) { return x * -amplitude});
-
-                    for (let i=0; i<array_data.length; i++) {
-                        phase_data[start] = array_data[i];
-                        start++;
-                    }
-
-                } else if(item["axis"] == "read") {
-                    let start = item["time"]/10;
-                    let object = item["object"];
-                    let amplitude = parseInt(data["objects"][object]["amplitude"]);
-
-                    // Updating the amplitude if available in the step.
-                    if ("amplitude" in item) {
-                        if (item["amplitude"] === "flip") {
-                            amplitude = amplitude * -1;
-                        }
-                        else if ("equation" in item["amplitude"]) {
-                            amplitude = 0.3378125*(1-64.5);
-                            data["objects"][object]["amplitude"] = amplitude;
-                        }
-                    }
-
-                    let array_name = data["objects"][object]["array"];
-                    let array_data = data["arrays"][array_name]["data"].map(function(x) { return x * -amplitude});
-
-                    for (let i=0; i<array_data.length; i++) {
-                        readout_data[start] = array_data[i];
-                        start++;
-                    }
-                }
+                } 
             });
             
 
