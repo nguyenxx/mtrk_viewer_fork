@@ -31,6 +31,7 @@
             const slice_data = Array(2000).fill(0);
             const phase_data = Array(2000).fill(0);
             const readout_data = Array(2000).fill(0);
+            const adc_data = Array(2000).fill(0);
 
             // Filling rf data
             let t = 10;
@@ -73,7 +74,16 @@
                         }
                         start++;
                     }
-                } 
+                } else if (item["action"] == "adc") {
+                    let start = item["time"]/10;
+                    let object = item["object"];
+                    let duration = data["objects"][object]["duration"]/10;
+                    
+                    for (let i=0; i<duration; i++) {
+                        adc_data[start] = 1;
+                        start += 1
+                    }
+                }
             });
             
 
@@ -131,14 +141,26 @@
             // line: { color: 'steelblue' }
             };
 
-            var stacked_plots = [plot_rf_data, plot_slice_data, plot_phase_data, plot_readout_data];
+            const plot_adc_data = {
+            x: x_standard,
+            y: adc_data,
+            xaxis: 'x5',
+            yaxis: 'y5',
+            type: 'scatter',
+            mode: 'lines+markers',
+            name: 'adc',
+            marker: { size: 5 },
+            // line: { color: 'steelblue' }
+            };
+
+            var stacked_plots = [plot_rf_data, plot_slice_data, plot_phase_data, plot_readout_data, plot_adc_data];
 
             var layout = {
             grid: {
-                rows: 4,
+                rows: 5,
                 columns: 1,
                 pattern: 'independent'},
-            height: 1000,
+            height: 1200,
             xaxis1: {
                 tickformat: "digits"
             },
@@ -149,6 +171,9 @@
                 tickformat: "digits"
             },
             xaxis4: {
+                tickformat: "digits"
+            },
+            xaxis5: {
                 title: "time (µs)",
                 titlefont: {
                     family: 'Arial, sans-serif',
@@ -163,8 +188,7 @@
                     family: 'Arial, sans-serif',
                     size: 16,
                     color: 'gray'
-                },
-                tickformat: "digits"
+                }
             },
             yaxis2: {
                 title: "mT/m",
@@ -172,8 +196,7 @@
                     family: 'Arial, sans-serif',
                     size: 16,
                     color: 'gray'
-                },
-                tickformat: "digits"
+                }
             },
             yaxis3: {
                 title: "mT/m",
@@ -181,8 +204,7 @@
                     family: 'Arial, sans-serif',
                     size: 16,
                     color: 'gray'
-                },
-                tickformat: "digits"
+                }
             },
             yaxis4: {
                 title: "mT/m",
@@ -190,8 +212,15 @@
                     family: 'Arial, sans-serif',
                     size: 16,
                     color: 'gray'
-                },
-                tickformat: "digits"
+                }
+            },
+            yaxis5: {
+                title: "mT/m",
+                titlefont: {
+                    family: 'Arial, sans-serif',
+                    size: 16,
+                    color: 'gray'
+                }
             },
             };
 
