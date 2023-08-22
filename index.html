@@ -90,7 +90,7 @@
             yaxis: 'y1',
             type: 'scatter',
             mode: 'lines+markers',
-            marker: { size: 6 },
+            marker: { size: 5 },
             name: 'rf pulse'
             // line: { color: 'steelblue' }
             };
@@ -103,7 +103,7 @@
             type: 'scatter',
             mode: 'lines+markers',
             name: 'slice',
-            marker: { size: 6 },
+            marker: { size: 5 },
             // line: { color: 'steelblue' }
             };
 
@@ -115,7 +115,7 @@
             type: 'scatter',
             mode: 'lines+markers',
             name: 'phase',
-            marker: { size: 6 },
+            marker: { size: 5 },
             // line: { color: 'steelblue' }
             };
 
@@ -127,7 +127,7 @@
             type: 'scatter',
             mode: 'lines+markers',
             name: 'readout',
-            marker: { size: 6 },
+            marker: { size: 5 },
             // line: { color: 'steelblue' }
             };
 
@@ -139,6 +139,60 @@
                 columns: 1,
                 pattern: 'independent'},
             height: 1000,
+            xaxis1: {
+                tickformat: "digits"
+            },
+            xaxis2: {
+                tickformat: "digits"
+            },
+            xaxis3: {
+                tickformat: "digits"
+            },
+            xaxis4: {
+                title: "time (µs)",
+                titlefont: {
+                    family: 'Arial, sans-serif',
+                    size: 18,
+                    color: 'gray'
+                },
+                tickformat: "digits"
+            },
+            yaxis1: {
+                title: "V",
+                titlefont: {
+                    family: 'Arial, sans-serif',
+                    size: 16,
+                    color: 'gray'
+                },
+                tickformat: "digits"
+            },
+            yaxis2: {
+                title: "mT/m",
+                titlefont: {
+                    family: 'Arial, sans-serif',
+                    size: 16,
+                    color: 'gray'
+                },
+                tickformat: "digits"
+            },
+            yaxis3: {
+                title: "mT/m",
+                titlefont: {
+                    family: 'Arial, sans-serif',
+                    size: 16,
+                    color: 'gray'
+                },
+                tickformat: "digits"
+            },
+            yaxis4: {
+                title: "mT/m",
+                titlefont: {
+                    family: 'Arial, sans-serif',
+                    size: 16,
+                    color: 'gray'
+                },
+                tickformat: "digits"
+            },
             };
 
             Plotly.newPlot('chart1', stacked_plots, layout);
