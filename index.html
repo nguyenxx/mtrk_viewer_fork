@@ -102,7 +102,6 @@
             mode: 'lines+markers',
             marker: { size: 5 },
             name: 'rf pulse'
-            // line: { color: 'steelblue' }
             };
 
             const plot_slice_data = {
@@ -114,7 +113,6 @@
             mode: 'lines+markers',
             name: 'slice',
             marker: { size: 5 },
-            // line: { color: 'steelblue' }
             };
 
             const plot_phase_data = {
@@ -126,7 +124,6 @@
             mode: 'lines+markers',
             name: 'phase',
             marker: { size: 5 },
-            // line: { color: 'steelblue' }
             };
 
             const plot_readout_data = {
@@ -138,7 +135,6 @@
             mode: 'lines+markers',
             name: 'readout',
             marker: { size: 5 },
-            // line: { color: 'steelblue' }
             };
 
             const plot_adc_data = {
@@ -150,7 +146,6 @@
             mode: 'lines+markers',
             name: 'adc',
             marker: { size: 5 },
-            // line: { color: 'steelblue' }
             };
 
             var stacked_plots = [plot_rf_data, plot_slice_data, plot_phase_data, plot_readout_data, plot_adc_data];
@@ -162,16 +157,24 @@
                 pattern: 'independent'},
             height: 1200,
             xaxis1: {
-                tickformat: "digits"
+                tickformat: "digits",
+                "showticklabels": true,
+                "matches": "x5",
             },
             xaxis2: {
-                tickformat: "digits"
+                tickformat: "digits",
+                "showticklabels": true,
+                "matches": "x5",
             },
             xaxis3: {
-                tickformat: "digits"
+                tickformat: "digits",
+                "showticklabels": true,
+                "matches": "x5",
             },
             xaxis4: {
-                tickformat: "digits"
+                tickformat: "digits",
+                "showticklabels": true,
+                "matches": "x5",
             },
             xaxis5: {
                 title: "time (µs)",
@@ -224,7 +227,12 @@
             },
             };
 
-            Plotly.newPlot('chart1', stacked_plots, layout, {scrollZoom: true});
+            const config = {
+                scrollZoom: true,
+                responsive: true,
+            }
+
+            Plotly.newPlot('chart1', stacked_plots, layout, config);
 
         </script>
 
