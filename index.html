@@ -12,7 +12,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-2">
-                    <!-- <div class="accordion" id="accordionExample">
+                    <div class="accordion" id="accordionExample">
                         <div class="accordion-item">
                           <h2 class="accordion-header">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
@@ -20,8 +20,8 @@
                             </button>
                           </h2>
                           <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
-                            <div class="accordion-body">
-                              <strong>This is the first item's accordion body.</strong> It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                            <div id="rfInfo" class="accordion-body">
+                              <strong>To be filled...</strong> 
                             </div>
                           </div>
                         </div>
@@ -32,8 +32,8 @@
                             </button>
                           </h2>
                           <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
-                            <div class="accordion-body">
-                              <strong>This is the second item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                            <div id="sliceInfo" class="accordion-body">
+
                             </div>
                           </div>
                         </div>
@@ -44,12 +44,24 @@
                             </button>
                           </h2>
                           <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
-                            <div class="accordion-body">
-                              <strong>This is the third item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                            <div id="phaseInfo" class="accordion-body">
+                              
                             </div>
                           </div>
                         </div>
-                      </div> -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                                Readout Data
+                              </button>
+                            </h2>
+                            <div id="collapseFour" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                              <div id="readoutInfo" class="accordion-body">
+                               
+                              </div>
+                            </div>
+                          </div>
+                      </div>
                 </div>
                 <div class="col-8">
                     <div id="chart1"></div>
@@ -88,12 +100,26 @@
             // Storing the steps
             const steps = data["instructions"]["block_TR"]["steps"];
 
+            // Arrays to store gradient info for web display
+            const slice_info = []
+            const phase_info = []
+            const readout_info = []
+
             // Executing each step and filling axis arrays.
             steps.forEach(function (item, index) {
                 if(item["axis"] == "slice" || item["axis"] == "phase" || item["axis"] == "read") {
                     let start = item["time"]/10;
                     let object = item["object"];
                     let amplitude = parseInt(data["objects"][object]["amplitude"]);
+
+                    const step_info = (start*10).toString() + "µs: " + object;
+                    if (item["axis"] == "slice") { 
+                        slice_info.push(step_info);
+                    } else if (item["axis"] == "phase") { 
+                        phase_info.push(step_info);
+                    } else if (item["axis"] == "read") { 
+                        readout_info.push(step_info);
+                    }
 
                     // Updating the amplitude if available in the step.
                     if ("amplitude" in item) {
@@ -200,8 +226,8 @@
                 rows: 5,
                 columns: 1,
                 pattern: 'independent'},
-            plot_bgcolor:"black",
-            paper_bgcolor:"black",
+            plot_bgcolor:"rgba(0,0,0,0.1)",
+            paper_bgcolor:"rgba(0,0,0,0.6)",
             height: 1200,
             xaxis1: {
                 tickformat: "digits",
@@ -211,7 +237,7 @@
                 color : 'white',
                 gridcolor: 'red'
                 },
-                "gridcolor": "rgba(255,255,255,0.1)",
+                "gridcolor": "rgba(255,255,255,0.05)",
                 "zerolinecolor": "rgba(255,255,255,0.5)",
             },
             xaxis2: {
@@ -221,7 +247,7 @@
                 tickfont : {
                 color : 'white'
                 },
-                "gridcolor": "rgba(255,255,255,0.1)",
+                "gridcolor": "rgba(255,255,255,0.05)",
                 "zerolinecolor": "rgba(255,255,255,0.5)",
             },
             xaxis3: {
@@ -231,7 +257,7 @@
                 tickfont : {
                 color : 'white'
                 },
-                "gridcolor": "rgba(255,255,255,0.1)",
+                "gridcolor": "rgba(255,255,255,0.05)",
                 "zerolinecolor": "rgba(255,255,255,0.5)",
             },
             xaxis4: {
@@ -241,7 +267,7 @@
                 tickfont : {
                 color : 'white'
                 },
-                "gridcolor": "rgba(255,255,255,0.1)",
+                "gridcolor": "rgba(255,255,255,0.05)",
                 "zerolinecolor": "rgba(255,255,255,0.5)",
             },
             xaxis5: {
@@ -255,7 +281,7 @@
                 tickfont : {
                 color : 'white'
                 },
-                "gridcolor": "rgba(255,255,255,0.1)",
+                "gridcolor": "rgba(255,255,255,0.05)",
                 "zerolinecolor": "rgba(255,255,255,0.5)",
             },
             yaxis1: {
@@ -268,7 +294,7 @@
                 tickfont : {
                 color : 'white'
                 },
-                "gridcolor": "rgba(255,255,255,0.1)",
+                "gridcolor": "rgba(255,255,255,0.05)",
                 "zerolinecolor": "rgba(255,255,255,0.5)",
             },
             yaxis2: {
@@ -281,7 +307,7 @@
                 tickfont : {
                 color : 'white'
                 },
-                "gridcolor": "rgba(255,255,255,0.1)",
+                "gridcolor": "rgba(255,255,255,0.05)",
                 "zerolinecolor": "rgba(255,255,255,0.5)",
             },
             yaxis3: {
@@ -294,7 +320,7 @@
                 tickfont : {
                 color : 'white'
                 },
-                "gridcolor": "rgba(255,255,255,0.1)",
+                "gridcolor": "rgba(255,255,255,0.05)",
                 "zerolinecolor": "rgba(255,255,255,0.5)",
             },
             yaxis4: {
@@ -307,7 +333,7 @@
                 tickfont : {
                 color : 'white'
                 },
-                "gridcolor": "rgba(255,255,255,0.1)",
+                "gridcolor": "rgba(255,255,255,0.05)",
                 "zerolinecolor": "rgba(255,255,255,0.5)",
             },
             yaxis5: {
@@ -320,7 +346,7 @@
                 tickfont : {
                 color : 'white'
                 },
-                "gridcolor": "rgba(255,255,255,0.1)",
+                "gridcolor": "rgba(255,255,255,0.05)",
                 "zerolinecolor": "rgba(255,255,255,0.5)",
             },
             };
@@ -331,6 +357,17 @@
             }
             
             Plotly.newPlot('chart1', stacked_plots, layout, config);
+
+            // Adding the plot info to the page
+            slice_info.forEach(function (item, index) {
+                document.getElementById("sliceInfo").innerHTML += "<code>" + item + "</code><br>"
+            });
+            phase_info.forEach(function (item, index) {
+                document.getElementById("phaseInfo").innerHTML += "<code>" + item + "</code><br>"
+            });
+            readout_info.forEach(function (item, index) {
+                document.getElementById("readoutInfo").innerHTML += "<code>" + item + "</code><br>"
+            });
 
         </script>
 
