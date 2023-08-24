@@ -112,15 +112,6 @@
                     let object = item["object"];
                     let amplitude = parseInt(data["objects"][object]["amplitude"]);
 
-                    const step_info = (start*10).toString() + "µs: " + object;
-                    if (item["axis"] == "slice") { 
-                        slice_info.push(step_info);
-                    } else if (item["axis"] == "phase") { 
-                        phase_info.push(step_info);
-                    } else if (item["axis"] == "read") { 
-                        readout_info.push(step_info);
-                    }
-
                     // Updating the amplitude if available in the step.
                     if ("amplitude" in item) {
                         if (item["amplitude"] === "flip") {
@@ -134,6 +125,16 @@
 
                     let array_name = data["objects"][object]["array"];
                     let array_data = data["arrays"][array_name]["data"].map(function(x) { return x * -amplitude});
+
+                    // Filling the step info
+                    const step_info = (start*10).toString() + "µs - " + ((start+array_data.length)*10).toString() + "µs: " + object;
+                    if (item["axis"] == "slice") { 
+                        slice_info.push(step_info);
+                    } else if (item["axis"] == "phase") { 
+                        phase_info.push(step_info);
+                    } else if (item["axis"] == "read") { 
+                        readout_info.push(step_info);
+                    }
 
                     for (let i=0; i<array_data.length; i++) {
                         if (item["axis"] == "slice") { 
