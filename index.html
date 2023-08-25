@@ -240,7 +240,7 @@
                 pattern: 'independent'},
             plot_bgcolor:"rgba(0,0,0,0.1)",
             paper_bgcolor:"rgba(0,0,0,0.6)",
-            height: 1200,
+            height: window.innerHeight,
             legend: {
                 font: {
                 family: 'sans-serif',
@@ -321,7 +321,7 @@
                 titlefont: {
                     family: 'Arial, sans-serif',
                     size: 12,
-                    color: 'white'
+                    color: 'rgba(255,255,255,0.9)'
                 },
                 tickfont : {
                 color : 'rgba(255,255,255,0.9)'
@@ -376,6 +376,12 @@
             }
             
             Plotly.newPlot('chart1', stacked_plots, layout, config);
+
+            // If the size of window is changed, we plot again!
+            window.onresize = function() {
+                layout["height"] = window.innerHeight;
+                Plotly.newPlot('chart1', stacked_plots, layout, config);
+            };
 
             // Adding the plot info to the page
             slice_info.forEach(function (item, index) {
