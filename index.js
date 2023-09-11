@@ -60,7 +60,9 @@ function plot_sequence(data) {
                         amplitude = amplitude * -1;
                     }
                     else if ("equation" in item["amplitude"]) {
-                        amplitude = 0.3378125*(rep-64.5);
+                        var equation_name = item["amplitude"]["equation"]
+                        var equation = data["equations"][equation_name]["equation"];
+                        amplitude = evaluate_equation(equation, rep);
                         data["objects"][object]["amplitude"] = amplitude;
                     }
                 }
@@ -345,3 +347,25 @@ fileInput.oninput = () => {
     plot_sequence(newData);
     };
 }
+
+function evaluate_equation(equation, rep) {
+    // To replace ctr(1) with the current rep value.
+    function ctr() {
+        return rep;
+    }
+
+    // If existing, it will replace the substring.
+    // We can add support for more functions accordingly.
+    var newEquation = equation.replace("sin", "Math.sin");
+    newEquation = newEquation.replace("cos", "Math.cos");
+    newEquation = newEquation.replace("tan", "Math.tan");
+    newEquation = newEquation.replace("cot", "Math.cot");
+    newEquation = newEquation.replace("sec", "Math.sec");
+    newEquation = newEquation.replace("csc", "Math.csc");
+    newEquation = newEquation.replace("exp", "Math.exp");
+
+    var val = eval(newEquation);
+    
+    return val;
+}
+
