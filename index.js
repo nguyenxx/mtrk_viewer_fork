@@ -9,15 +9,30 @@ function plot_sequence(data) {
         rf_odd_data.push(rf_pulse_data[2*i+1])
     }
 
-    // Number of reps for all the steps
-    // const reps = data["instructions"]["main"]["steps"][0]["range"];
-    const reps = 2;
+    // Storing the steps
+    const steps = data["instructions"]["block_TR"]["steps"];
 
-    const rf_data = Array(2000 * reps).fill(0);
-    const slice_data = Array(2000 * reps).fill(0);
-    const phase_data = Array(2000 * reps).fill(0);
-    const readout_data = Array(2000 * reps).fill(0);
-    const adc_data = Array(2000 * reps).fill(0);
+    // Number of reps for all the steps
+    const reps = data["instructions"]["main"]["steps"][0]["range"];
+    // const reps = 2;
+
+    // Step size - Siemens
+    const step_size = 10;
+
+    // Getting the array size from last step
+    var size;
+    steps.forEach(function (item, index) {
+        if(item["action"] == "mark") {
+            size = item["time"];
+        }
+    });
+    const array_size = size/step_size;
+
+    const rf_data = Array(array_size * reps).fill(0);
+    const slice_data = Array(array_size * reps).fill(0);
+    const phase_data = Array(array_size * reps).fill(0);
+    const readout_data = Array(array_size * reps).fill(0);
+    const adc_data = Array(array_size * reps).fill(0);
 
     // Arrays to store gradient info for web display
     const slice_info = []
@@ -26,21 +41,16 @@ function plot_sequence(data) {
 
     // Repeating the steps 
     for (let rep=0; rep<reps; rep++) {
-
-        // Filling rf data
-        let t = 10 + rep*2000;
-        for (let i=0; i<rf_even_data.length; i++) {
-            rf_data[t] = rf_even_data[i];
-            t++;
-        }
-
-        // Storing the steps
-        const steps = data["instructions"]["block_TR"]["steps"];
-        
         // Executing each step and filling axis arrays.
         steps.forEach(function (item, index) {
-            if(item["axis"] == "slice" || item["axis"] == "phase" || item["axis"] == "read") {
-                let start = item["time"]/10 + rep*2000;
+            if (item["action"] == "rf") {
+                let start = item["time"]/step_size + rep*array_size;
+                for (let i=0; i<rf_even_data.length; i++) {
+                    rf_data[start] = rf_even_data[i];
+                    start++;
+                }
+            } else if(item["axis"] == "slice" || item["axis"] == "phase" || item["axis"] == "read") {
+                let start = item["time"]/step_size + rep*array_size;
                 let object = item["object"];
                 let amplitude = parseInt(data["objects"][object]["amplitude"]);
 
@@ -60,7 +70,7 @@ function plot_sequence(data) {
 
                 // Filling the step info
                 const step_info = "Rep " + (rep+1).toString() + ": " + 
-                                (start*10).toString() + "µs - " + ((start+array_data.length)*10).toString() + "µs: " + object;
+                                (start*step_size).toString() + "µs - " + ((start+array_data.length)*step_size).toString() + "µs: " + object;
 
                 if (item["axis"] == "slice") { 
                     slice_info.push(step_info);
@@ -81,9 +91,9 @@ function plot_sequence(data) {
                     start++;
                 }
             } else if (item["action"] == "adc") {
-                let start = item["time"]/10 + rep*2000;
+                let start = item["time"]/step_size + rep*array_size;
                 let object = item["object"];
-                let duration = data["objects"][object]["duration"]/10;
+                let duration = data["objects"][object]["duration"]/step_size;
                 
                 for (let i=0; i<duration; i++) {
                     adc_data[start] = 1;
@@ -95,7 +105,7 @@ function plot_sequence(data) {
 
     // Taking standard x-axis for all the plots.
     const x_standard = []
-    for (let i=0; i<20000*reps; i+=10) {
+    for (let i=0; i<array_size*step_size*reps; i+=step_size) {
         x_standard.push(i);
     }
 
