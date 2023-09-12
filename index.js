@@ -39,14 +39,23 @@ function plot_sequence(data) {
     const phase_info = []
     const readout_info = []
 
+    // Arrays to store object info for hover text
+    const rf_text = Array(array_size * reps).fill("None");
+    const slice_text = Array(array_size * reps).fill("None");
+    const phase_text = Array(array_size * reps).fill("None");
+    const readout_text = Array(array_size * reps).fill("None");
+    const adc_text = Array(array_size * reps).fill("None");
+
     // Repeating the steps 
     for (let rep=0; rep<reps; rep++) {
         // Executing each step and filling axis arrays.
         steps.forEach(function (item, index) {
             if (item["action"] == "rf") {
                 let start = item["time"]/step_size + rep*array_size;
+                let object = item["object"];
                 for (let i=0; i<rf_even_data.length; i++) {
                     rf_data[start] = rf_even_data[i];
+                    rf_text[start] = object;
                     start++;
                 }
             } else if(item["axis"] == "slice" || item["axis"] == "phase" || item["axis"] == "read") {
@@ -74,21 +83,26 @@ function plot_sequence(data) {
                 const step_info = "Rep " + (rep+1).toString() + ": " + 
                                 (start*step_size).toString() + "µs - " + ((start+array_data.length)*step_size).toString() + "µs: " + object;
 
-                if (item["axis"] == "slice") { 
-                    slice_info.push(step_info);
-                } else if (item["axis"] == "phase") { 
-                    phase_info.push(step_info);
-                } else if (item["axis"] == "read") { 
-                    readout_info.push(step_info);
+                if (rep < 1) {
+                    if (item["axis"] == "slice") { 
+                        slice_info.push(step_info);
+                    } else if (item["axis"] == "phase") { 
+                        phase_info.push(step_info);
+                    } else if (item["axis"] == "read") { 
+                        readout_info.push(step_info);
+                    }
                 }
 
                 for (let i=0; i<array_data.length; i++) {
                     if (item["axis"] == "slice") { 
-                        slice_data[start] = array_data[i]; 
+                        slice_data[start] = array_data[i];
+                        slice_text[start] = object;
                     } else if (item["axis"] == "phase") { 
-                        phase_data[start] = array_data[i]; 
+                        phase_data[start] = array_data[i];
+                        phase_text[start] = object; 
                     } else if (item["axis"] == "read") { 
                         readout_data[start] = array_data[i];
+                        readout_text[start] = object;
                     }
                     start++;
                 }
@@ -99,6 +113,7 @@ function plot_sequence(data) {
                 
                 for (let i=0; i<duration; i++) {
                     adc_data[start] = 1;
+                    adc_text[start] = object;
                     start += 1
                 }
             }
@@ -119,7 +134,9 @@ function plot_sequence(data) {
     type: 'scatter',
     // mode: 'lines+markers',
     // marker: { size: 5 },
-    name: 'RF pulse'
+    name: 'RF pulse',
+    text: rf_text,
+    hovertemplate: '<b> %{text}</b><br> %{y}<extra></extra>'
     };
 
     const plot_slice_data = {
@@ -131,6 +148,8 @@ function plot_sequence(data) {
     // mode: 'lines+markers',
     name: 'slice',
     // marker: { size: 5 },
+    text: slice_text,
+    hovertemplate: '<b> %{text}</b><br> %{y}<extra></extra>'
     };
 
     const plot_phase_data = {
@@ -142,6 +161,8 @@ function plot_sequence(data) {
     // mode: 'lines+markers',
     name: 'phase',
     // marker: { size: 5 },
+    text: phase_text,
+    hovertemplate: '<b> %{text}</b><br> %{y}<extra></extra>'
     };
 
     const plot_readout_data = {
@@ -153,6 +174,8 @@ function plot_sequence(data) {
     // mode: 'lines+markers',
     name: 'readout',
     // marker: { size: 5 },
+    text: readout_text,
+    hovertemplate: '<b> %{text}</b><br> %{y}<extra></extra>'
     };
 
     const plot_adc_data = {
@@ -164,6 +187,8 @@ function plot_sequence(data) {
     // mode: 'lines+markers',
     name: 'ADC',
     // marker: { size: 5 },
+    text: adc_text,
+    hovertemplate: '<b> %{text}</b><br> %{y}<extra></extra>'
     };
 
     var stacked_plots = [plot_rf_data, plot_slice_data, plot_phase_data, plot_readout_data, plot_adc_data];
