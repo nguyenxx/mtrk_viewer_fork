@@ -335,19 +335,6 @@ function plot_sequence(data) {
     });
 }
 
-plot_sequence(data);
-
-const fileInput = document.getElementById('formFile');
-fileInput.oninput = () => {
-  const selectedFile = fileInput.files[0];
-  var reader = new FileReader();
-  reader.readAsText(selectedFile, "UTF-8");
-  reader.onload = function(e) {
-    var newData = JSON.parse(reader.result);
-    plot_sequence(newData);
-    };
-}
-
 function evaluate_equation(equation, rep) {
     // To replace ctr(1) with the current rep value.
     function ctr() {
@@ -365,7 +352,25 @@ function evaluate_equation(equation, rep) {
     newEquation = newEquation.replace("exp", "Math.exp");
 
     var val = eval(newEquation);
-    
+
     return val;
 }
 
+$(document).ready(function() {
+    plot_sequence(data);
+    const fileInput = document.getElementById('formFile');
+    fileInput.oninput = () => {
+    const selectedFile = fileInput.files[0];
+    var reader = new FileReader();
+    reader.readAsText(selectedFile, "UTF-8");
+    reader.onload = function(e) {
+        try {
+            var newData = JSON.parse(reader.result);
+            plot_sequence(newData);
+            $("#alert").hide();
+        } catch ({ name, message }) {
+            $("#alert").show();
+        }
+        };
+    }
+});
