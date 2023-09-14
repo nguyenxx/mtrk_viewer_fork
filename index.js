@@ -341,12 +341,27 @@ function plot_sequence(data) {
     }
 
     Plotly.newPlot('chart1', stacked_plots, layout, config);
+    const myPlot = document.getElementById('chart1');
 
-    // If the size of window is changed, we plot again!
+    // If the size of window is changed, we update the layout!
     window.onresize = function() {
-        layout["height"] = window.innerHeight;
-        Plotly.newPlot('chart1', stacked_plots, layout, config);
+        var update = {
+            "height": window.innerHeight,
+            "width": $("#chart1").width(),
+        }
+        Plotly.relayout(myPlot, update);
     };
+
+    // If more zoomed out than the initial zoom- reset it.
+    myPlot.on('plotly_relayout',(e)=>{
+        var zoom_level = e['xaxis.range[0]'];
+        if (zoom_level < 0){
+            var update = {
+                'xaxis.autorange': true,
+            };
+            Plotly.relayout(myPlot, update);
+        }
+    })
 
     // Adding the plot info to the page
     slice_info.forEach(function (item, index) {
