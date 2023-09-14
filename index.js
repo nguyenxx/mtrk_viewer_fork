@@ -123,7 +123,7 @@ function plot_sequence(data) {
     // Taking standard x-axis for all the plots.
     const x_standard = []
     for (let i=0; i<array_size*step_size*reps; i+=step_size) {
-        x_standard.push(i);
+        x_standard.push(i/1000);
     }
 
     const plot_rf_data = {
@@ -250,7 +250,7 @@ function plot_sequence(data) {
         "zerolinecolor": "rgba(255,255,255,0.5)",
     },
     xaxis5: {
-        title: "time (µs)",
+        title: "time (ms)",
         titlefont: {
             family: 'Arial, sans-serif',
             size: 12,
