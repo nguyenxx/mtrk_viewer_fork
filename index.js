@@ -136,7 +136,7 @@ function plot_sequence(data) {
     // marker: { size: 5 },
     name: 'RF pulse',
     text: rf_text,
-    hovertemplate: '<b> %{text}</b><br> %{y}<extra></extra>'
+    hovertemplate: '<b> %{text}</b><br> %{y:.2f}<extra></extra>'
     };
 
     const plot_slice_data = {
@@ -149,7 +149,7 @@ function plot_sequence(data) {
     name: 'slice',
     // marker: { size: 5 },
     text: slice_text,
-    hovertemplate: '<b> %{text}</b><br> %{y}<extra></extra>'
+    hovertemplate: '<b> %{text}</b><br> %{y:.2f}<extra></extra>'
     };
 
     const plot_phase_data = {
@@ -162,7 +162,7 @@ function plot_sequence(data) {
     name: 'phase',
     // marker: { size: 5 },
     text: phase_text,
-    hovertemplate: '<b> %{text}</b><br> %{y}<extra></extra>'
+    hovertemplate: '<b> %{text}</b><br> %{y:.2f}<extra></extra>'
     };
 
     const plot_readout_data = {
@@ -175,7 +175,7 @@ function plot_sequence(data) {
     name: 'readout',
     // marker: { size: 5 },
     text: readout_text,
-    hovertemplate: '<b> %{text}</b><br> %{y}<extra></extra>'
+    hovertemplate: '<b> %{text}</b><br> %{y:.2f}<extra></extra>'
     };
 
     const plot_adc_data = {
@@ -188,7 +188,7 @@ function plot_sequence(data) {
     name: 'ADC',
     // marker: { size: 5 },
     text: adc_text,
-    hovertemplate: '<b> %{text}</b><br> %{y}<extra></extra>'
+    hovertemplate: '<b> %{text}</b><br> %{y:.2f}<extra></extra>'
     };
 
     var stacked_plots = [plot_rf_data, plot_slice_data, plot_phase_data, plot_readout_data, plot_adc_data];
