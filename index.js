@@ -19,6 +19,9 @@ function plot_sequence(data) {
     // Step size - Siemens
     const step_size = 10;
 
+    // storing the objects
+    const objects = data["objects"];
+
     // Getting the array size from last step
     var size;
     steps.forEach(function (item, index) {
@@ -363,6 +366,46 @@ function plot_sequence(data) {
         }
     })
 
+    // If shift is pressed, we will show detailed object information.
+    const default_hover_template = '<b> %{text}</b><br> %{y:.2f}<extra></extra>';
+    myPlot.on('plotly_hover', function(data){
+        if (shiftIsPressed) {
+            var infotext = data.points.map(function(d){
+                return ([d.data.name,d.x]);
+              });
+            var axis_name = infotext[0][0];
+            var x_val = infotext[0][1];
+            const name_to_text_data = {
+                "RF pulse": rf_text,
+                "slice": slice_text,
+                "phase": phase_text,
+                "readout": readout_text,
+                "ADC": adc_text
+            }
+            var object_name = name_to_text_data[axis_name][parseInt(x_val*1000/step_size)];
+            if (object_name == "None") {
+                return;
+            }
+            var object_data = objects[object_name];
+            var object_data_string = "";
+            for (const property in object_data) {
+                object_data_string += `${property}: ${object_data[property]} <br>`;
+              }
+            var shift_hover_template = '<b>' + object_name + '</b><br><br><extra></extra>' +
+                                        object_data_string;
+            var update = {
+                hovertemplate: shift_hover_template
+            }
+            Plotly.restyle(myPlot, update, [0,1,2,3,4])
+        }
+    })
+     .on('plotly_unhover', function(){
+        var update = {
+            hovertemplate: default_hover_template
+        }
+        Plotly.restyle(myPlot, update, [0,1,2,3,4])
+    });
+
     // Adding the plot info to the page
     slice_info.forEach(function (item, index) {
         document.getElementById("sliceInfo").innerHTML += "<code>" + item + "</code><br>"
@@ -414,3 +457,14 @@ $(document).ready(function() {
         };
     }
 });
+
+// Check whether control button is pressed
+$(document).keydown(function(event) {
+    if (event.which == "16") {
+        shiftIsPressed = true;
+    }
+});
+$(document).keyup(function() {
+    shiftIsPressed = false;
+});
+var shiftIsPressed = false;
