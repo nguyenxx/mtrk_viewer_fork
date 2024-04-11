@@ -31,23 +31,25 @@ function plot_sequence(data) {
     });
     const array_size = size/step_size;
 
-    const rf_data = Array(array_size * reps).fill(0);
-    const slice_data = Array(array_size * reps).fill(0);
-    const phase_data = Array(array_size * reps).fill(0);
-    const readout_data = Array(array_size * reps).fill(0);
-    const adc_data = Array(array_size * reps).fill(0);
+    const rf_data = [];
+    const slice_data = [];
+    const phase_data = [];
+    const readout_data = [];
+    const adc_data = [];
 
-    // Arrays to store gradient info for web display
-    const slice_info = []
-    const phase_info = []
-    const readout_info = []
+    const rf_data_x = [];
+    const slice_data_x = [];
+    const phase_data_x = [];
+    const readout_data_x = [];
+    const adc_data_x = [];
+
 
     // Arrays to store object info for hover text
-    const rf_text = Array(array_size * reps).fill("None");
-    const slice_text = Array(array_size * reps).fill("None");
-    const phase_text = Array(array_size * reps).fill("None");
-    const readout_text = Array(array_size * reps).fill("None");
-    const adc_text = Array(array_size * reps).fill("None");
+    const rf_text = [];
+    const slice_text = [];
+    const phase_text = [];
+    const readout_text = [];
+    const adc_text = [];
 
     // Repeating the steps 
     for (let rep=0; rep<reps; rep++) {
@@ -57,8 +59,9 @@ function plot_sequence(data) {
                 let start = item["time"]/step_size + rep*array_size;
                 let object = item["object"];
                 for (let i=0; i<rf_even_data.length; i++) {
-                    rf_data[start] = rf_even_data[i];
-                    rf_text[start] = object;
+                    rf_data.push(rf_even_data[i]);
+                    rf_text.push(object);
+                    rf_data_x.push(start);
                     start++;
                 }
             } else if(item["axis"] == "slice" || item["axis"] == "phase" || item["axis"] == "read") {
@@ -82,30 +85,19 @@ function plot_sequence(data) {
                 let array_name = data["objects"][object]["array"];
                 let array_data = data["arrays"][array_name]["data"].map(function(x) { return x * -amplitude});
 
-                // Filling the step info
-                const step_info = "Rep " + (rep+1).toString() + ": " + 
-                                (start*step_size).toString() + "µs - " + ((start+array_data.length)*step_size).toString() + "µs: " + object;
-
-                if (rep < 1) {
-                    if (item["axis"] == "slice") { 
-                        slice_info.push(step_info);
-                    } else if (item["axis"] == "phase") { 
-                        phase_info.push(step_info);
-                    } else if (item["axis"] == "read") { 
-                        readout_info.push(step_info);
-                    }
-                }
-
                 for (let i=0; i<array_data.length; i++) {
                     if (item["axis"] == "slice") { 
-                        slice_data[start] = array_data[i];
-                        slice_text[start] = object;
+                        slice_data.push(array_data[i]);
+                        slice_text.push(object);
+                        slice_data_x.push(start);
                     } else if (item["axis"] == "phase") { 
-                        phase_data[start] = array_data[i];
-                        phase_text[start] = object; 
+                        phase_data.push(array_data[i]);
+                        phase_text.push(object);
+                        phase_data_x.push(start);
                     } else if (item["axis"] == "read") { 
-                        readout_data[start] = array_data[i];
-                        readout_text[start] = object;
+                        readout_data.push(array_data[i]);
+                        readout_text.push(object);
+                        readout_data_x.push(start);
                     }
                     start++;
                 }
@@ -115,81 +107,66 @@ function plot_sequence(data) {
                 let duration = data["objects"][object]["duration"]/step_size;
                 
                 for (let i=0; i<duration; i++) {
-                    adc_data[start] = 1;
-                    adc_text[start] = object;
+                    adc_data.push(1);
+                    adc_text.push(object);
+                    adc_data_x.push(start);
                     start += 1
                 }
             }
         });
     }
 
-    // Taking standard x-axis for all the plots.
-    const x_standard = []
-    for (let i=0; i<array_size*step_size*reps; i+=step_size) {
-        x_standard.push(i/1000);
-    }
-
     const plot_rf_data = {
-    x: x_standard,
+    x: rf_data_x,
     y: rf_data,
     xaxis: 'x1',
     yaxis: 'y1',
     type: 'scatter',
-    // mode: 'lines+markers',
-    // marker: { size: 5 },
     name: 'RF pulse',
     text: rf_text,
     hovertemplate: '<b> %{text}</b><br> %{y:.2f}<extra></extra>'
     };
 
     const plot_slice_data = {
-    x: x_standard,
+    x: slice_data_x,
     y: slice_data,
     xaxis: 'x2',
     yaxis: 'y2',
     type: 'scatter',
-    // mode: 'lines+markers',
     name: 'slice',
-    // marker: { size: 5 },
     text: slice_text,
     hovertemplate: '<b> %{text}</b><br> %{y:.2f}<extra></extra>'
     };
 
     const plot_phase_data = {
-    x: x_standard,
+    x: phase_data_x,
     y: phase_data,
     xaxis: 'x3',
     yaxis: 'y3',
     type: 'scatter',
-    // mode: 'lines+markers',
     name: 'phase',
-    // marker: { size: 5 },
     text: phase_text,
     hovertemplate: '<b> %{text}</b><br> %{y:.2f}<extra></extra>'
     };
 
     const plot_readout_data = {
-    x: x_standard,
+    x: readout_data_x,
     y: readout_data,
     xaxis: 'x4',
     yaxis: 'y4',
     type: 'scatter',
-    // mode: 'lines+markers',
     name: 'readout',
-    // marker: { size: 5 },
     text: readout_text,
     hovertemplate: '<b> %{text}</b><br> %{y:.2f}<extra></extra>'
     };
 
     const plot_adc_data = {
-    x: x_standard,
+    x: adc_data_x,
     y: adc_data,
     xaxis: 'x5',
     yaxis: 'y5',
     type: 'scatter',
-    // mode: 'lines+markers',
     name: 'ADC',
-    // marker: { size: 5 },
     text: adc_text,
     hovertemplate: '<b> %{text}</b><br> %{y:.2f}<extra></extra>'
     };
@@ -204,13 +181,7 @@ function plot_sequence(data) {
     plot_bgcolor:"rgba(0,0,0,0.1)",
     paper_bgcolor:"rgba(0,0,0,0.6)",
     height: window.innerHeight,
-    legend: {
-        font: {
-        family: 'sans-serif',
-        size: 12,
-        color: 'rgba(255,255,255,0.8)'
-        },
-    },
+    showlegend: false,
     xaxis1: {
         tickformat: "digits",
         "showticklabels": true,
@@ -405,17 +376,6 @@ function plot_sequence(data) {
         }
         Plotly.restyle(myPlot, update, [0,1,2,3,4])
     });
-
-    // Adding the plot info to the page
-    slice_info.forEach(function (item, index) {
-        document.getElementById("sliceInfo").innerHTML += "<code>" + item + "</code><br>"
-    });
-    phase_info.forEach(function (item, index) {
-        document.getElementById("phaseInfo").innerHTML += "<code>" + item + "</code><br>"
-    });
-    readout_info.forEach(function (item, index) {
-        document.getElementById("readoutInfo").innerHTML += "<code>" + item + "</code><br>"
-    });
 }
 
 function evaluate_equation(equation, rep) {
@@ -458,7 +418,7 @@ $(document).ready(function() {
     }
 });
 
-// Check whether control button is pressed
+// Check whether shift button is pressed
 $(document).keydown(function(event) {
     if (event.which == "16") {
         shiftIsPressed = true;
