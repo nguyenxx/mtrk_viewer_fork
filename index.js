@@ -341,30 +341,16 @@ function plot_sequence(data) {
     const default_hover_template = '<b> %{text}</b><br> %{y:.2f}<extra></extra>';
     myPlot.on('plotly_hover', function(data){
         if (shiftIsPressed) {
-            var infotext = data.points.map(function(d){
-                return ([d.data.name,d.x]);
-              });
-            var axis_name = infotext[0][0];
-            var x_val = infotext[0][1];
-            const name_to_text_data = {
-                "RF pulse": rf_text,
-                "slice": slice_text,
-                "phase": phase_text,
-                "readout": readout_text,
-                "ADC": adc_text
-            }
-            var object_name = name_to_text_data[axis_name][parseInt(x_val*1000/step_size)];
-            if (object_name == "None") {
-                return;
-            }
-            var object_data = objects[object_name];
-            var object_data_string = "";
+            let object_name = data.points[0].text;
+
+            let object_data = objects[object_name];
+            let object_data_string = "";
             for (const property in object_data) {
                 object_data_string += `${property}: ${object_data[property]} <br>`;
               }
-            var shift_hover_template = '<b>' + object_name + '</b><br><br><extra></extra>' +
+            let shift_hover_template = '<b>' + object_name + '</b><br><br><extra></extra>' +
                                         object_data_string;
-            var update = {
+            let update = {
                 hovertemplate: shift_hover_template
             }
             Plotly.restyle(myPlot, update, [0,1,2,3,4])
