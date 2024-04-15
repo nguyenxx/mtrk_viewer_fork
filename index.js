@@ -117,196 +117,197 @@ function plot_sequence(data) {
     }
 
     const plot_rf_data = {
-    x: rf_data_x,
-    y: rf_data,
-    xaxis: 'x1',
-    yaxis: 'y1',
-    type: 'scatter',
-    name: 'RF pulse',
-    text: rf_text,
-    hovertemplate: '<b> %{text}</b><br> %{y:.2f}<extra></extra>'
+        x: rf_data_x,
+        y: rf_data,
+        xaxis: 'x1',
+        yaxis: 'y1',
+        type: 'scatter',
+        name: 'RF pulse',
+        text: rf_text,
+        hovertemplate: '<b> %{text}</b><br> %{y:.2f}<extra></extra>'
     };
 
     const plot_slice_data = {
-    x: slice_data_x,
-    y: slice_data,
-    xaxis: 'x2',
-    yaxis: 'y2',
-    type: 'scatter',
-    name: 'slice',
-    text: slice_text,
-    hovertemplate: '<b> %{text}</b><br> %{y:.2f}<extra></extra>'
+        x: slice_data_x,
+        y: slice_data,
+        xaxis: 'x2',
+        yaxis: 'y2',
+        type: 'scatter',
+        name: 'slice',
+        text: slice_text,
+        hovertemplate: '<b> %{text}</b><br> %{y:.2f}<extra></extra>'
     };
 
     const plot_phase_data = {
-    x: phase_data_x,
-    y: phase_data,
-    xaxis: 'x3',
-    yaxis: 'y3',
-    type: 'scatter',
-    name: 'phase',
-    text: phase_text,
-    hovertemplate: '<b> %{text}</b><br> %{y:.2f}<extra></extra>'
+        x: phase_data_x,
+        y: phase_data,
+        xaxis: 'x3',
+        yaxis: 'y3',
+        type: 'scatter',
+        name: 'phase',
+        text: phase_text,
+        hovertemplate: '<b> %{text}</b><br> %{y:.2f}<extra></extra>'
     };
 
     const plot_readout_data = {
-    x: readout_data_x,
-    y: readout_data,
-    xaxis: 'x4',
-    yaxis: 'y4',
-    type: 'scatter',
-    name: 'readout',
-    text: readout_text,
-    hovertemplate: '<b> %{text}</b><br> %{y:.2f}<extra></extra>'
+        x: readout_data_x,
+        y: readout_data,
+        xaxis: 'x4',
+        yaxis: 'y4',
+        type: 'scatter',
+        name: 'readout',
+        text: readout_text,
+        hovertemplate: '<b> %{text}</b><br> %{y:.2f}<extra></extra>'
     };
 
     const plot_adc_data = {
-    x: adc_data_x,
-    y: adc_data,
-    xaxis: 'x5',
-    yaxis: 'y5',
-    type: 'scatter',
-    name: 'ADC',
-    text: adc_text,
-    hovertemplate: '<b> %{text}</b><br> %{y:.2f}<extra></extra>'
+        x: adc_data_x,
+        y: adc_data,
+        xaxis: 'x5',
+        yaxis: 'y5',
+        type: 'scatter',
+        name: 'ADC',
+        text: adc_text,
+        hovertemplate: '<b> %{text}</b><br> %{y:.2f}<extra></extra>'
     };
 
     var stacked_plots = [plot_rf_data, plot_slice_data, plot_phase_data, plot_readout_data, plot_adc_data];
 
     var layout = {
-    grid: {
-        rows: 5,
-        columns: 1,
-        pattern: 'independent'},
-    plot_bgcolor:"rgba(0,0,0,0.1)",
-    paper_bgcolor:"rgba(0,0,0,0.6)",
-    height: window.innerHeight,
-    showlegend: false,
-    xaxis1: {
-        tickformat: "digits",
-        "showticklabels": true,
-        "matches": "x5",
-        tickfont : {
-        color : 'rgba(255,255,255,0.9)',
-        gridcolor: 'red'
+        grid: {
+            rows: 5,
+            columns: 1,
+            pattern: 'independent'
         },
-        "gridcolor": "rgba(255,255,255,0.05)",
-        "zerolinecolor": "rgba(255,255,255,0.5)",
-    },
-    xaxis2: {
-        tickformat: "digits",
-        "showticklabels": true,
-        "matches": "x5",
-        tickfont : {
-        color : 'rgba(255,255,255,0.9)'
+        plot_bgcolor:"rgba(0,0,0,0.1)",
+        paper_bgcolor:"rgba(0,0,0,0.6)",
+        height: window.innerHeight,
+        showlegend: false,
+        xaxis1: {
+            tickformat: "digits",
+            "showticklabels": true,
+            "matches": "x5",
+            tickfont : {
+            color : 'rgba(255,255,255,0.9)',
+            gridcolor: 'red'
+            },
+            "gridcolor": "rgba(255,255,255,0.05)",
+            "zerolinecolor": "rgba(255,255,255,0.5)",
         },
-        "gridcolor": "rgba(255,255,255,0.05)",
-        "zerolinecolor": "rgba(255,255,255,0.5)",
-    },
-    xaxis3: {
-        tickformat: "digits",
-        "showticklabels": true,
-        "matches": "x5",
-        tickfont : {
-        color : 'rgba(255,255,255,0.9)'
+        xaxis2: {
+            tickformat: "digits",
+            "showticklabels": true,
+            "matches": "x5",
+            tickfont : {
+            color : 'rgba(255,255,255,0.9)'
+            },
+            "gridcolor": "rgba(255,255,255,0.05)",
+            "zerolinecolor": "rgba(255,255,255,0.5)",
         },
-        "gridcolor": "rgba(255,255,255,0.05)",
-        "zerolinecolor": "rgba(255,255,255,0.5)",
-    },
-    xaxis4: {
-        tickformat: "digits",
-        "showticklabels": true,
-        "matches": "x5",
-        tickfont : {
-        color : 'rgba(255,255,255,0.9)'
+        xaxis3: {
+            tickformat: "digits",
+            "showticklabels": true,
+            "matches": "x5",
+            tickfont : {
+            color : 'rgba(255,255,255,0.9)'
+            },
+            "gridcolor": "rgba(255,255,255,0.05)",
+            "zerolinecolor": "rgba(255,255,255,0.5)",
         },
-        "gridcolor": "rgba(255,255,255,0.05)",
-        "zerolinecolor": "rgba(255,255,255,0.5)",
-    },
-    xaxis5: {
-        title: "time (ms)",
-        titlefont: {
-            family: 'Arial, sans-serif',
-            size: 12,
-            color: 'rgba(255,255,255,0.9)'
+        xaxis4: {
+            tickformat: "digits",
+            "showticklabels": true,
+            "matches": "x5",
+            tickfont : {
+            color : 'rgba(255,255,255,0.9)'
+            },
+            "gridcolor": "rgba(255,255,255,0.05)",
+            "zerolinecolor": "rgba(255,255,255,0.5)",
         },
-        tickformat: "digits",
-        tickfont : {
-        color : 'rgba(255,255,255,0.9)'
+        xaxis5: {
+            title: "time (ms)",
+            titlefont: {
+                family: 'Arial, sans-serif',
+                size: 12,
+                color: 'rgba(255,255,255,0.9)'
+            },
+            tickformat: "digits",
+            tickfont : {
+            color : 'rgba(255,255,255,0.9)'
+            },
+            "gridcolor": "rgba(255,255,255,0.05)",
+            "zerolinecolor": "rgba(255,255,255,0.5)",
         },
-        "gridcolor": "rgba(255,255,255,0.05)",
-        "zerolinecolor": "rgba(255,255,255,0.5)",
-    },
-    yaxis1: {
-        title: "RF (V)",
-        titlefont: {
-            family: 'Arial, sans-serif',
-            size: 12,
-            color: 'rgba(255,255,255,0.9)'
+        yaxis1: {
+            title: "RF (V)",
+            titlefont: {
+                family: 'Arial, sans-serif',
+                size: 12,
+                color: 'rgba(255,255,255,0.9)'
+            },
+            tickfont : {
+            color : 'rgba(255,255,255,0.9)'
+            },
+            "gridcolor": "rgba(255,255,255,0.05)",
+            "zerolinecolor": "rgba(255,255,255,0.5)",
+            fixedrange: true,
         },
-        tickfont : {
-        color : 'rgba(255,255,255,0.9)'
+        yaxis2: {
+            title: "Slice (mT/m)",
+            titlefont: {
+                family: 'Arial, sans-serif',
+                size: 12,
+                color: 'rgba(255,255,255,0.9)'
+            },
+            tickfont : {
+            color : 'rgba(255,255,255,0.9)'
+            },
+            "gridcolor": "rgba(255,255,255,0.05)",
+            "zerolinecolor": "rgba(255,255,255,0.5)",
+            fixedrange: true,
         },
-        "gridcolor": "rgba(255,255,255,0.05)",
-        "zerolinecolor": "rgba(255,255,255,0.5)",
-        fixedrange: true,
-    },
-    yaxis2: {
-        title: "Slice (mT/m)",
-        titlefont: {
-            family: 'Arial, sans-serif',
-            size: 12,
-            color: 'rgba(255,255,255,0.9)'
+        yaxis3: {
+            title: "Phase (mT/m)",
+            titlefont: {
+                family: 'Arial, sans-serif',
+                size: 12,
+                color: 'rgba(255,255,255,0.9)'
+            },
+            tickfont : {
+            color : 'rgba(255,255,255,0.9)'
+            },
+            "gridcolor": "rgba(255,255,255,0.05)",
+            "zerolinecolor": "rgba(255,255,255,0.5)",
+            fixedrange: true,
         },
-        tickfont : {
-        color : 'rgba(255,255,255,0.9)'
+        yaxis4: {
+            title: "Readout (mT/m)",
+            titlefont: {
+                family: 'Arial, sans-serif',
+                size: 12,
+                color: 'rgba(255,255,255,0.9)'
+            },
+            tickfont : {
+            color : 'rgba(255,255,255,0.9)'
+            },
+            "gridcolor": "rgba(255,255,255,0.05)",
+            "zerolinecolor": "rgba(255,255,255,0.5)",
+            fixedrange: true,
         },
-        "gridcolor": "rgba(255,255,255,0.05)",
-        "zerolinecolor": "rgba(255,255,255,0.5)",
-        fixedrange: true,
-    },
-    yaxis3: {
-        title: "Phase (mT/m)",
-        titlefont: {
-            family: 'Arial, sans-serif',
-            size: 12,
-            color: 'rgba(255,255,255,0.9)'
+        yaxis5: {
+            title: "ADC (on/off)",
+            titlefont: {
+                family: 'Arial, sans-serif',
+                size: 12,
+                color: 'rgba(255,255,255,0.9)'
+            },
+            tickfont : {
+            color : 'rgba(255,255,255,0.9)'
+            },
+            "gridcolor": "rgba(255,255,255,0.05)",
+            "zerolinecolor": "rgba(255,255,255,0.5)",
+            fixedrange: true,
         },
-        tickfont : {
-        color : 'rgba(255,255,255,0.9)'
-        },
-        "gridcolor": "rgba(255,255,255,0.05)",
-        "zerolinecolor": "rgba(255,255,255,0.5)",
-        fixedrange: true,
-    },
-    yaxis4: {
-        title: "Readout (mT/m)",
-        titlefont: {
-            family: 'Arial, sans-serif',
-            size: 12,
-            color: 'rgba(255,255,255,0.9)'
-        },
-        tickfont : {
-        color : 'rgba(255,255,255,0.9)'
-        },
-        "gridcolor": "rgba(255,255,255,0.05)",
-        "zerolinecolor": "rgba(255,255,255,0.5)",
-        fixedrange: true,
-    },
-    yaxis5: {
-        title: "ADC (on/off)",
-        titlefont: {
-            family: 'Arial, sans-serif',
-            size: 12,
-            color: 'rgba(255,255,255,0.9)'
-        },
-        tickfont : {
-        color : 'rgba(255,255,255,0.9)'
-        },
-        "gridcolor": "rgba(255,255,255,0.05)",
-        "zerolinecolor": "rgba(255,255,255,0.5)",
-        fixedrange: true,
-    },
     };
 
     const config = {
