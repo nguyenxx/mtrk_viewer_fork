@@ -11,6 +11,7 @@ function plot_sequence(data) {
 
     // Storing the steps
     const steps = data["instructions"]["block_TR"]["steps"];
+    steps.sort((a, b) => a.time - b.time);
 
     // Number of reps for all the steps
     const reps = data["instructions"]["main"]["steps"][0]["range"];
@@ -62,7 +63,7 @@ function plot_sequence(data) {
                     rf_data.push(rf_even_data[i]);
                     rf_text.push(object);
                     rf_data_x.push(start);
-                    start++;
+                    start += 2;
                 }
             } else if(item["axis"] == "slice" || item["axis"] == "phase" || item["axis"] == "read") {
                 let start = item["time"]/step_size + rep*array_size;
