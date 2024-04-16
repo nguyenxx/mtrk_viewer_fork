@@ -106,12 +106,18 @@ function plot_sequence(data) {
                 let object = item["object"];
                 let duration = data["objects"][object]["duration"]/step_size;
                 
+                adc_data.push(0);
+                adc_text.push(0);
+                adc_data_x.push(start-1);
                 for (let i=0; i<duration; i++) {
                     adc_data.push(1);
                     adc_text.push(object);
                     adc_data_x.push(start);
-                    start += 1
+                    start += 1;
                 }
+                adc_data.push(0);
+                adc_text.push(0);
+                adc_data_x.push(start);
             }
         });
     }
