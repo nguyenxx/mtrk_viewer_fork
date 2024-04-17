@@ -1,7 +1,10 @@
 import data from "./miniflash.json" assert { type: 'json' };
 
 function plot_sequence(data) {
-    const rf_pulse_data = data["arrays"]["rfpulse"]["data"]
+    var rf_pulse_data = [];
+    if ("rfpulse" in data["arrays"])  rf_pulse_data = data["arrays"]["rfpulse"]["data"];
+    else rf_pulse_data = data["arrays"]["rf_pulse"]["data"];
+
     const rf_odd_data = []
     const rf_even_data = []
     for (let i=0; i < 128; i++) {
@@ -10,7 +13,9 @@ function plot_sequence(data) {
     }
 
     // Storing the steps
-    const steps = data["instructions"]["block_TR"]["steps"];
+    var steps = [];
+    if ("block_TR" in data["instructions"]) steps = data["instructions"]["block_TR"]["steps"];
+    else steps = data["instructions"]["Block_1"]["steps"];
     steps.sort((a, b) => a.time - b.time);
 
     // Number of reps for all the steps
