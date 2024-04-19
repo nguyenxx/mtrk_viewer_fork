@@ -1,4 +1,5 @@
 import data from "./miniflash.json" assert { type: 'json' };
+import { JSONEditor } from 'https://cdn.jsdelivr.net/npm/vanilla-jsoneditor/standalone.js'
 
 function plot_sequence(data) {
     var rf_pulse_data = [];
@@ -400,21 +401,46 @@ function evaluate_equation(equation, rep) {
 
 $(document).ready(function() {
     plot_sequence(data);
+    let content = {
+        text: undefined,
+        json: data
+    }
+    const editor = new JSONEditor({
+        target: document.getElementById('jsonviewer'),
+        props: {
+            content,
+            mainMenuBar: false,
+            navigationBar: false,
+            statusBar: false,
+            readOnly: true,
+        }
+    });
+
     const fileInput = document.getElementById('formFile');
     fileInput.oninput = () => {
-    const selectedFile = fileInput.files[0];
-    var reader = new FileReader();
-    reader.readAsText(selectedFile, "UTF-8");
-    reader.onload = function(e) {
-        try {
-            var newData = JSON.parse(reader.result);
-            plot_sequence(newData);
-            $("#alert").hide();
-        } catch ({ name, message }) {
-            $("#alert").show();
-        }
+        const selectedFile = fileInput.files[0];
+        var reader = new FileReader();
+        reader.readAsText(selectedFile, "UTF-8");
+        reader.onload = function(e) {
+            try {
+                let newData = JSON.parse(reader.result);
+                plot_sequence(newData);
+                let newContent = {
+                    text: undefined,
+                    json: newData
+                }
+                editor.set(newContent);
+                $("#alert").hide();
+            } catch ({ name, message }) {
+                $("#alert").show();
+            }
         };
     }
+
+    $("#view-file-btn").click(function () {
+        editor.expand(path => path.length < 2);
+        $('#fileViewerModal').modal('toggle');
+    });
 });
 
 // Check whether shift button is pressed
