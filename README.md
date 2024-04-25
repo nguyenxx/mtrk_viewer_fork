@@ -1,23 +1,23 @@
-# MTRK Web - MRI Pulse Sequence Visualization Software
+# MTRK Viewer - MRI Pulse Sequence Visualization Software
 
-MTRK is a powerful MRI pulse sequence visualization software that allows you to visualize custom pulse sequences for magnetic resonance imaging (MRI) experiments.
+MTRK Viewer is a powerful MRI pulse sequence visualization software that allows you to visualize custom pulse sequences for magnetic resonance imaging (MRI) experiments.
 
 ## Getting Started
 
-Follow these steps to run MTRK on your local machine:
+Follow these steps to run the MTRK viewer on your local machine:
 
 ### 1. Clone the Repository
 
-First, clone the MTRK Web repository to your local machine using Git:
+First, clone the MTRK Viewer repository to your local machine using Git:
 
 
-`git clone https://github.com/mtrk-dev/mtrk_web.git`
+`git clone https://github.com/mtrk-dev/mtrk_viewer.git`
 
 ### 2. Open the Repository in Visual Studio Code
-Open the MTRK repository in Visual Studio Code (VS Code).
+Open the repository in Visual Studio Code (VS Code).
 
 ### 3. Download the VS Code Extension - "Live Server"
-To run the MTRK web application, you'll need the "Live Server" extension for VS Code. You can install it from the Visual Studio Code marketplace by following these steps:
+To run the MTRK viewer application, you'll need the "Live Server" extension for VS Code. You can install it from the Visual Studio Code marketplace by following these steps:
 * Open VS Code.
 * Click on the Extensions icon in the Activity Bar on the side of the window.
 * Search for "Live Server" in the Extensions Marketplace.
@@ -32,4 +32,4 @@ Once you have the "Live Server" extension installed, you can use it to run the M
 
 ### Note
 
-You can change the variable `reps` value in the `index.html` file. That will essentially repeat the block sequence as many times as the value.
+You can change the variable `reps` value in the `index.html` file. That will repeat the block sequence as many times as the value.
