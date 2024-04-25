@@ -15,8 +15,12 @@ function plot_sequence(data) {
 
     // Storing the steps
     var steps = [];
-    if ("block_TR" in data["instructions"]) steps = data["instructions"]["block_TR"]["steps"];
-    else steps = data["instructions"]["Block_1"]["steps"];
+    var block_names = [];
+    for (let block_name in data["instructions"]) {
+        if (block_name != "main") block_names.push(block_name);
+    }
+    let block_to_run = block_names[0];
+    steps = data["instructions"][block_to_run]["steps"];
     steps.sort((a, b) => a.time - b.time);
 
     // Number of reps for all the steps
