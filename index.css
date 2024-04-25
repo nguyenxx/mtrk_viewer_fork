@@ -7,6 +7,10 @@
     background: none;
 }
 
+#fileViewerFileName {
+    margin-left: 1%;
+}
+
 /* JSON Editor Dark Theme CSS */
 .jse-theme-dark {
     --jse-theme: dark;

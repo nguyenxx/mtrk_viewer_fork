@@ -434,6 +434,7 @@ $(document).ready(function() {
                     json: newData
                 }
                 editor.set(newContent);
+                $("#fileViewerFileName").text("- " + selectedFile.name);
                 $("#alert").hide();
             } catch ({ name, message }) {
                 $("#alert").show();
