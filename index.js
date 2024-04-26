@@ -94,7 +94,7 @@ function plot_sequence(data) {
                 }
 
                 let array_name = data["objects"][object]["array"];
-                let array_data = data["arrays"][array_name]["data"].map(function(x) { return x * -amplitude});
+                let array_data = data["arrays"][array_name]["data"].map(function(x) { return x * amplitude});
 
                 for (let i=0; i<array_data.length; i++) {
                     if (item["axis"] == "slice") { 
