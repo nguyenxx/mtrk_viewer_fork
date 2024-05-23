@@ -1,4 +1,4 @@
-import data from "./miniflash.json" assert { type: 'json' };
+import data from "./miniflash.json" with { type: 'json' };
 import { JSONEditor } from 'https://cdn.jsdelivr.net/npm/vanilla-jsoneditor/standalone.js'
 
 function plot_sequence(data) {
@@ -195,6 +195,12 @@ function plot_sequence(data) {
             rows: 5,
             columns: 1,
             pattern: 'independent'
+        },
+        margin: {
+            t: 20,
+            b: 40,
+            // r: 15,
+            // l: 60
         },
         plot_bgcolor:"rgba(0,0,0,0.1)",
         paper_bgcolor:"rgba(0,0,0,0.6)",
@@ -458,3 +464,9 @@ $(document).keyup(function() {
     shiftIsPressed = false;
 });
 var shiftIsPressed = false;
+
+var popover = new bootstrap.Popover(document.querySelector('.shortcuts-popover'), {
+    container: 'body',
+    html: true,
+    content: $('[data-name="popover-content"]')
+});

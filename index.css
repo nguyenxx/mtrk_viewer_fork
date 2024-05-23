@@ -11,6 +11,13 @@
     margin-left: 1%;
 }
 
+#keyboard-shortcuts {
+    margin-bottom: 1%;
+    position: absolute;
+    bottom: 0;
+    background: transparent;
+}
+
 /* JSON Editor Dark Theme CSS */
 .jse-theme-dark {
     --jse-theme: dark;
