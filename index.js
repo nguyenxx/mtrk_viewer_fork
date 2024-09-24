@@ -1,6 +1,32 @@
 import data from "./miniflash.json" with { type: 'json' };
 import { JSONEditor } from 'https://cdn.jsdelivr.net/npm/vanilla-jsoneditor/standalone.js'
 
+function dfs_visit_block(block_name, instructions, visited_blocks, steps_to_plot) {
+    if (block_name in visited_blocks) return;
+    visited_blocks[block_name] = true;
+
+    let block_data = instructions[block_name];
+    let steps = block_data.steps;
+    let range = 1;
+    steps_to_plot[block_name] = {"reps": 1, "steps": []};
+
+    for (let step of steps) {
+        if (step.action == "run_block") {
+            dfs_visit_block(step.block, instructions, visited_blocks, steps_to_plot);
+        } else if (step.action == "loop") {
+            range = step.range;
+            steps.push.apply(steps, step.steps);
+        } else if (step.action == "rf" || step.action == "grad" || step.action == "adc" || step.action == "mark") {
+            steps_to_plot[block_name]["steps"].push(step);
+        } else if (step.action == "init" || step.action == "sync" || step.action == "calc") {
+            // TODO: deal with even actions
+        }
+    }
+
+    steps_to_plot[block_name]["reps"] = range;
+    steps_to_plot[block_name]["steps"].sort((a, b) => a.time - b.time);
+}
+
 function plot_sequence(data) {
     var rf_pulse_data = [];
     if ("rfpulse" in data["arrays"])  rf_pulse_data = data["arrays"]["rfpulse"]["data"];
@@ -13,19 +39,14 @@ function plot_sequence(data) {
         rf_odd_data.push(rf_pulse_data[2*i+1])
     }
 
-    // Storing the steps
-    var steps = [];
-    var block_names = [];
-    for (let block_name in data["instructions"]) {
-        if (block_name != "main") block_names.push(block_name);
+    // Storing the steps that need to be plotted
+    var visited_blocks = {};
+    var steps_to_plot = {};
+    var instructions = JSON.parse(JSON.stringify(data["instructions"]));
+    for (let block_name in instructions) {
+        dfs_visit_block(block_name, instructions, visited_blocks, steps_to_plot);
+        visited_blocks[block_name] = true;
     }
-    let block_to_run = block_names[0];
-    steps = data["instructions"][block_to_run]["steps"];
-    steps.sort((a, b) => a.time - b.time);
-
-    // Number of reps for all the steps
-    const reps = data["instructions"]["main"]["steps"][0]["range"];
-    // const reps = 2;
 
     // Step size - Siemens
     const step_size = 10;
@@ -35,11 +56,13 @@ function plot_sequence(data) {
 
     // Getting the array size from last step
     var size;
-    steps.forEach(function (item, index) {
-        if(item["action"] == "mark") {
-            size = item["time"];
-        }
-    });
+    for (let block_name in steps_to_plot) {
+        steps_to_plot[block_name]["steps"].forEach(function (item, index) {
+            if(item["action"] == "mark") {
+                size = item["time"];
+            }
+        });
+    }
     const array_size = size/step_size;
 
     const rf_data = [];
@@ -62,75 +85,79 @@ function plot_sequence(data) {
     const readout_text = [];
     const adc_text = [];
 
-    // Repeating the steps 
-    for (let rep=0; rep<reps; rep++) {
-        // Executing each step and filling axis arrays.
-        steps.forEach(function (item, index) {
-            if (item["action"] == "rf") {
-                let start = item["time"]/step_size + rep*array_size;
-                let object = item["object"];
-                for (let i=0; i<rf_even_data.length; i++) {
-                    rf_data.push(rf_even_data[i]);
-                    rf_text.push(object);
-                    rf_data_x.push(start);
-                    start += 2;
-                }
-            } else if(item["axis"] == "slice" || item["axis"] == "phase" || item["axis"] == "read") {
-                let start = item["time"]/step_size + rep*array_size;
-                let object = item["object"];
-                let amplitude = parseInt(data["objects"][object]["amplitude"]);
-
-                // Updating the amplitude if available in the step.
-                if ("amplitude" in item) {
-                    if (item["amplitude"] === "flip") {
-                        amplitude = amplitude * -1;
+    // Repeating the steps
+    let reps = 1;
+    for (let block_name in steps_to_plot) {
+        for (let rep=0; rep<reps; rep++) {
+            // Executing each step and filling axis arrays.
+            steps_to_plot[block_name]["steps"].forEach(function (item, index) {
+                if (item["action"] == "rf") {
+                    let start = item["time"]/step_size + rep*array_size;
+                    let object = item["object"];
+                    for (let i=0; i<rf_even_data.length; i++) {
+                        rf_data.push(rf_even_data[i]);
+                        rf_text.push(object);
+                        rf_data_x.push(start);
+                        start += 2;
                     }
-                    else if ("equation" in item["amplitude"]) {
-                        var equation_name = item["amplitude"]["equation"]
-                        var equation = data["equations"][equation_name]["equation"];
-                        amplitude = evaluate_equation(equation, rep);
-                        data["objects"][object]["amplitude"] = amplitude;
-                    }
-                }
+                } else if(item["axis"] == "slice" || item["axis"] == "phase" || item["axis"] == "read") {
+                    let start = item["time"]/step_size + rep*array_size;
+                    let object = item["object"];
+                    let amplitude = parseInt(data["objects"][object]["amplitude"]);
 
-                let array_name = data["objects"][object]["array"];
-                let array_data = data["arrays"][array_name]["data"].map(function(x) { return x * amplitude});
-
-                for (let i=0; i<array_data.length; i++) {
-                    if (item["axis"] == "slice") { 
-                        slice_data.push(array_data[i]);
-                        slice_text.push(object);
-                        slice_data_x.push(start);
-                    } else if (item["axis"] == "phase") { 
-                        phase_data.push(array_data[i]);
-                        phase_text.push(object);
-                        phase_data_x.push(start);
-                    } else if (item["axis"] == "read") { 
-                        readout_data.push(array_data[i]);
-                        readout_text.push(object);
-                        readout_data_x.push(start);
+                    // Updating the amplitude if available in the step.
+                    if ("amplitude" in item) {
+                        if (item["amplitude"] === "flip") {
+                            amplitude = amplitude * -1;
+                        }
+                        else if ("equation" in item["amplitude"]) {
+                            var equation_name = item["amplitude"]["equation"]
+                            var equation = data["equations"][equation_name]["equation"];
+                            amplitude = evaluate_equation(equation, rep);
+                            data["objects"][object]["amplitude"] = amplitude;
+                        }
                     }
-                    start++;
-                }
-            } else if (item["action"] == "adc") {
-                let start = item["time"]/step_size + rep*array_size;
-                let object = item["object"];
-                let duration = data["objects"][object]["duration"]/step_size;
-                
-                adc_data.push(0);
-                adc_text.push(0);
-                adc_data_x.push(start-1);
-                for (let i=0; i<duration; i++) {
-                    adc_data.push(1);
-                    adc_text.push(object);
+
+                    let array_name = data["objects"][object]["array"];
+                    let array_data = data["arrays"][array_name]["data"].map(function(x) { return x * amplitude});
+
+                    for (let i=0; i<array_data.length; i++) {
+                        if (item["axis"] == "slice") {
+                            slice_data.push(array_data[i]);
+                            slice_text.push(object);
+                            slice_data_x.push(start);
+                        } else if (item["axis"] == "phase") {
+                            phase_data.push(array_data[i]);
+                            phase_text.push(object);
+                            phase_data_x.push(start);
+                        } else if (item["axis"] == "read") {
+                            readout_data.push(array_data[i]);
+                            readout_text.push(object);
+                            readout_data_x.push(start);
+                        }
+                        start++;
+                    }
+                } else if (item["action"] == "adc") {
+                    let start = item["time"]/step_size + rep*array_size;
+                    let object = item["object"];
+                    let duration = data["objects"][object]["duration"]/step_size;
+
+                    adc_data.push(0);
+                    adc_text.push(0);
+                    adc_data_x.push(start-1);
+                    for (let i=0; i<duration; i++) {
+                        adc_data.push(1);
+                        adc_text.push(object);
+                        adc_data_x.push(start);
+                        start += 1;
+                    }
+                    adc_data.push(0);
+                    adc_text.push(0);
                     adc_data_x.push(start);
-                    start += 1;
                 }
-                adc_data.push(0);
-                adc_text.push(0);
-                adc_data_x.push(start);
-            }
-        });
+            });
+        }
+        reps = steps_to_plot[block_name]["reps"];
     }
 
     const plot_rf_data = {
@@ -444,6 +471,7 @@ $(document).ready(function() {
                 $("#alert").hide();
             } catch ({ name, message }) {
                 $("#alert").show();
+                console.log(name, message);
             }
         };
     }
