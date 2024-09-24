@@ -18,6 +18,14 @@
     background: transparent;
 }
 
+.navbar-brand {
+    font-size: 24px;
+}
+
+#dummy-file-alert{
+    margin-top: 5%;
+}
+
 /* JSON Editor Dark Theme CSS */
 .jse-theme-dark {
     --jse-theme: dark;

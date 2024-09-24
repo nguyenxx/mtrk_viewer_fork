@@ -437,6 +437,7 @@ function evaluate_equation(equation, rep) {
 }
 
 $(document).ready(function() {
+    $("#dummy-file-alert").show();
     plot_sequence(data);
     let content = {
         text: undefined,
@@ -474,6 +475,7 @@ $(document).ready(function() {
                 console.log(name, message);
             }
         };
+        $("#dummy-file-alert").hide();
     }
 
     $("#view-file-btn").click(function () {
