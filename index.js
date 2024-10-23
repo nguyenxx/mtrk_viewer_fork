@@ -463,6 +463,12 @@ $(document).ready(function() {
             try {
                 let newData = JSON.parse(reader.result);
                 plot_sequence(newData);
+                if (document.documentElement.getAttribute('data-bs-theme') == 'dark') {
+                    toggle_plot_color(false);
+                }
+                else {
+                    toggle_plot_color(true);
+                }
                 let newContent = {
                     text: undefined,
                     json: newData
@@ -482,6 +488,15 @@ $(document).ready(function() {
         editor.expand(path => path.length < 2);
         $('#fileViewerModal').modal('toggle');
     });
+
+    $('#flexSwitchCheckChecked').click(function(){
+        let current_theme = document.documentElement.getAttribute('data-bs-theme');
+        if (current_theme == "light") {
+            update_theme("dark");
+        } else {
+            update_theme("light");
+        }
+    });
 });
 
 // Check whether shift button is pressed
@@ -500,3 +515,81 @@ var popover = new bootstrap.Popover(document.querySelector('.shortcuts-popover')
     html: true,
     content: $('[data-name="popover-content"]')
 });
+
+function update_theme(toTheme) {
+    if (toTheme == "light") {
+        document.documentElement.setAttribute('data-bs-theme','light');
+        $('input[type="checkbox"]').attr("checked", false);
+        $(".btn-secondary").each(function(){
+            $(this).removeClass("btn-secondary");
+            $(this).addClass("btn-light");
+        });
+        $("body").css('background', "#f8fafc");
+        toggle_plot_color(true);
+        $("#plot-col").css({'background': "#ffffff", 'border-left': "1px solid #dfe2e6", 'border-right': "1px solid #dfe2e6"});
+        $("#mtrk-logo").hide();
+        $("#mtrk-logo-dark").show();
+        $("#mtrk-logo").removeClass("d-inline-block");
+        $("#mtrk-logo-dark").addClass("d-inline-block");
+    }
+    else {
+        document.documentElement.setAttribute('data-bs-theme','dark');
+        $('input[type="checkbox"]').attr("checked", true);
+        $(".btn-light").each(function(){
+            $(this).removeClass("btn-light");
+            $(this).addClass("btn-secondary");
+        });
+        $("body").css('background', "var(--bs-body-bg)");
+        toggle_plot_color(false);
+        $("#plot-col").css({'background': "var(--bs-body-bg)", "border-left": "1px solid #34373b", "border-right": "1px solid #34373b"});
+        $("#mtrk-logo").show();
+        $("#mtrk-logo-dark").hide();
+        $("#mtrk-logo-dark").removeClass("d-inline-block");
+        $("#mtrk-logo").addClass("d-inline-block");
+    }
+}
+
+function toggle_plot_color(isDark) {
+    if (isDark) {
+        var update = {
+            "plot_bgcolor":"rgba(255,255,255,0.1)",
+            "paper_bgcolor":"rgba(255,255,255,0.1)",
+            "title.font.color": 'rgba(0,0,0,0.9)'
+        }
+        for (let i = 0; i <= 5; i++) {
+            let xaxis_number = i;
+            if (i == 0) {
+                xaxis_number = "";
+            }
+            update[`xaxis${xaxis_number}.titlefont.color`] = "rgba(0,0,0,0.9)";
+            update[`xaxis${xaxis_number}.tickfont.color`] = "rgba(0,0,0,0.9)";
+            update[`xaxis${xaxis_number}.gridcolor`] = "rgba(0,0,0,0.05)";
+            update[`xaxis${xaxis_number}.zerolinecolor`] = "rgba(0,0,0,0.2)";
+            update[`yaxis${xaxis_number}.titlefont.color`] = "rgba(0,0,0,0.9)";
+            update[`yaxis${xaxis_number}.tickfont.color`] = "rgba(0,0,0,0.9)";
+            update[`yaxis${xaxis_number}.gridcolor`] = "rgba(0,0,0,0.05)";
+            update[`yaxis${xaxis_number}.zerolinecolor`] = "rgba(0,0,0,0.2)";
+        }
+    } else {
+        var update = {
+            "plot_bgcolor":"rgba(0,0,0,0.1)",
+            "paper_bgcolor":"rgba(0,0,0,0.6)",
+            "title.font.color": 'rgba(255,255,255,0.9)'
+        }
+        for (let i = 0; i <= 5; i++) {
+            let xaxis_number = i;
+            if (i == 0) {
+                xaxis_number = "";
+            }
+            update[`xaxis${xaxis_number}.titlefont.color`] = "rgba(255,255,255,0.9)";
+            update[`xaxis${xaxis_number}.tickfont.color`] = "rgba(255,255,255,0.9)";
+            update[`xaxis${xaxis_number}.gridcolor`] = "rgba(255,255,255,0.05)";
+            update[`xaxis${xaxis_number}.zerolinecolor`] = "rgba(255,255,255,0.1)";
+            update[`yaxis${xaxis_number}.titlefont.color`] = "rgba(255,255,255,0.9)";
+            update[`yaxis${xaxis_number}.tickfont.color`] = "rgba(255,255,255,0.9)";
+            update[`yaxis${xaxis_number}.gridcolor`] = "rgba(255,255,255,0.05)";
+            update[`yaxis${xaxis_number}.zerolinecolor`] = "rgba(255,255,255,0.1)";
+        }
+    }
+    Plotly.relayout("chart1", update);
+}

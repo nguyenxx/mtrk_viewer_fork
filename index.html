@@ -6,6 +6,7 @@
         <title>mtrk &middot; Viewer</title>
         <link rel="shortcut icon" href="mtrk_icon.ico" type="image/x-icon">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link href="https://fonts.googleapis.com/css2?family=Jura:wght@300..700&display=swap" rel="stylesheet">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
         <link rel="stylesheet" type="text/css" href="index.css" />
         <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
@@ -13,7 +14,7 @@
     <body>
         <div class="container">
             <div class="row">
-                <div class="col-10">
+                <div id="plot-col" class="col-10">
                   <!-- for Plotly chart -->
                     <div id="chart1"></div>
                   <!-- for SDL file viewer -->
@@ -36,8 +37,15 @@
                     </div>
                 </div>
                 <div class="col-2">
+                  <div id="modeSwitch" class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
+                    <label class="form-check-label" for="flexSwitchCheckChecked">
+                      <i class="fa fa-moon-o theme-icon"></i>
+                    </label>
+                  </div>
                   <a class="navbar-brand" href="">
                     <img id="mtrk-logo" src="mtrk_icon.ico" alt="" width="35" height="35" class="d-inline-block align-text-top">
+                    <img id="mtrk-logo-dark" src="mtrk_color.png" alt="" width="35" height="35" class="align-text-top" hidden>
                     <span id="brandingText">mtrk</span>
                   </a>
                   <hr>

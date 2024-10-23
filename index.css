@@ -26,6 +26,46 @@
     margin-top: 5%;
 }
 
+#brandingText {
+    padding-left: 2px;
+    letter-spacing: 1px;
+    font-family: "Jura", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+    font-weight: 500;
+}
+
+#plot-col {
+    padding-right: 0px;
+    padding-left: 0px;
+    border-left: 1px solid #34373b;
+    border-right: 1px solid #34373b;
+}
+
+.theme-icon {
+    font-size: 13px;
+}
+
+#modeSwitch {
+    margin-bottom: 5%;
+}
+
+#flexSwitchCheckChecked {
+    height: 20px;
+    width: 35px;
+}
+
+#flexSwitchCheckChecked:checked {
+    background-color: #5e2669;
+    border-color: #7d2381;
+}
+
+/* Update light class */
+.btn-light {
+    background: #fff;
+    border: 1px solid #dfe2e6;
+}
+
 /* JSON Editor Dark Theme CSS */
 .jse-theme-dark {
     --jse-theme: dark;
