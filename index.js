@@ -363,6 +363,7 @@ function plot_sequence(data) {
     const config = {
         scrollZoom: true,
         responsive: true,
+        displaylogo: false,
     }
 
     Plotly.newPlot('chart1', stacked_plots, layout, config);
@@ -593,3 +594,11 @@ function toggle_plot_color(isDark) {
     }
     Plotly.relayout("chart1", update);
 }
+
+window.addEventListener('load', function() {
+    var loader = document.getElementById('loader');
+    loader.style.opacity = '0'; // Fade out loader
+    setTimeout(function() {
+        loader.style.display = 'none'; // Hide loader
+    }, 500); // Wait for fade-out effect to complete
+});
