@@ -92,10 +92,12 @@ function plot_sequence(data) {
             // Executing each step and filling axis arrays.
             steps_to_plot[block_name]["steps"].forEach(function (item, index) {
                 if (item["action"] == "rf") {
+                    let object_name = item["object"];
+                    let flip_angle = parseInt(data["objects"][object_name]["flipangle"]);
                     let start = item["time"]/step_size + rep*array_size;
                     let object = item["object"];
                     for (let i=0; i<rf_even_data.length; i++) {
-                        rf_data.push(rf_even_data[i]);
+                        rf_data.push(rf_even_data[i] * flip_angle);
                         rf_text.push(object);
                         rf_data_x.push(start);
                         start += 2;
@@ -289,7 +291,7 @@ function plot_sequence(data) {
             "zerolinecolor": "rgba(255,255,255,0.5)",
         },
         yaxis1: {
-            title: "RF (V)",
+            title: "RF (FA)",
             titlefont: {
                 family: 'Arial, sans-serif',
                 size: 12,
