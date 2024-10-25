@@ -71,11 +71,11 @@ function plot_sequence(data) {
     const readout_data = [];
     const adc_data = [];
 
-    const rf_data_x = [];
-    const slice_data_x = [];
-    const phase_data_x = [];
-    const readout_data_x = [];
-    const adc_data_x = [];
+    var rf_data_x = [];
+    var slice_data_x = [];
+    var phase_data_x = [];
+    var readout_data_x = [];
+    var adc_data_x = [];
 
 
     // Arrays to store object info for hover text
@@ -161,6 +161,13 @@ function plot_sequence(data) {
         }
         reps = steps_to_plot[block_name]["reps"];
     }
+
+    // divide all the x data by 100 to get the time in ms
+    rf_data_x = rf_data_x.map(x => x/100);
+    slice_data_x = slice_data_x.map(x => x/100);
+    phase_data_x = phase_data_x.map(x => x/100);
+    readout_data_x = readout_data_x.map(x => x/100);
+    adc_data_x = adc_data_x.map(x => x/100);
 
     const plot_rf_data = {
         x: rf_data_x,
