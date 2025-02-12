@@ -1,3 +1,7 @@
+![mtrk](/mtrk_icon.ico)
+
+![GitHub](https://img.shields.io/github/license/mtrk-dev/mtrk_viewer?color=%23c3ab8b)
+
 # MTRK Viewer - MRI Pulse Sequence Visualization Software
 
 MTRK Viewer is a powerful MRI pulse sequence visualization software that allows you to visualize custom pulse sequences for magnetic resonance imaging (MRI) experiments.
