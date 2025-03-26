@@ -1,5 +1,5 @@
 import data from "./miniflash.json" with { type: 'json' };
-import { JSONEditor } from 'https://cdn.jsdelivr.net/npm/vanilla-jsoneditor/standalone.js'
+import { createJSONEditor } from 'https://cdn.jsdelivr.net/npm/vanilla-jsoneditor/standalone.js'
 
 function dfs_visit_block(block_name, instructions, visited_blocks, steps_to_plot) {
     if (block_name in visited_blocks) return;
@@ -446,6 +446,8 @@ function evaluate_equation(equation, rep) {
     return val;
 }
 
+var json_editor = null;
+
 $(document).ready(function() {
     $("#dummy-file-alert").show();
     plot_sequence(data);
@@ -453,7 +455,7 @@ $(document).ready(function() {
         text: undefined,
         json: data
     }
-    const editor = new JSONEditor({
+    json_editor = createJSONEditor({
         target: document.getElementById('jsonviewer'),
         props: {
             content,
@@ -470,32 +472,15 @@ $(document).ready(function() {
         var reader = new FileReader();
         reader.readAsText(selectedFile, "UTF-8");
         reader.onload = function(e) {
-            try {
-                let newData = JSON.parse(reader.result);
-                plot_sequence(newData);
-                if (document.documentElement.getAttribute('data-bs-theme') == 'dark') {
-                    toggle_plot_color(false);
-                }
-                else {
-                    toggle_plot_color(true);
-                }
-                let newContent = {
-                    text: undefined,
-                    json: newData
-                }
-                editor.set(newContent);
-                $("#fileViewerFileName").text("- " + selectedFile.name);
-                $("#alert").hide();
-            } catch ({ name, message }) {
-                $("#alert").show();
-                console.log(name, message);
-            }
+            let newData = JSON.parse(reader.result);
+            load_sdl_file(newData);
+            json_editor.set({text: undefined, json: newData});
+            $("#fileViewerFileName").text("- " + selectedFile.name);
         };
-        $("#dummy-file-alert").hide();
     }
 
     $("#view-file-btn").click(function () {
-        editor.expand(path => path.length < 2);
+        json_editor.expand([], relativePath => relativePath.length < 2);
         $('#fileViewerModal').modal('toggle');
     });
 
@@ -604,10 +589,39 @@ function toggle_plot_color(isDark) {
     Plotly.relayout("chart1", update);
 }
 
+function load_sdl_file(sdl_data) {
+    try {
+        plot_sequence(sdl_data);
+        if (document.documentElement.getAttribute('data-bs-theme') == 'dark') {
+            toggle_plot_color(false);
+        }
+        else {
+            toggle_plot_color(true);
+        }
+        $("#alert").hide();
+        $("#dummy-file-alert").hide();
+        $("#output-sdl-alert").hide();
+    } catch ({ name, message }) {
+        $("#alert").show();
+        console.log(name, message);
+    }
+}
+
 window.addEventListener('load', function() {
     var loader = document.getElementById('loader');
     loader.style.opacity = '0'; // Fade out loader
     setTimeout(function() {
         loader.style.display = 'none'; // Hide loader
     }, 500); // Wait for fade-out effect to complete
+});
+
+var designer_url = 'http://127.0.0.1:5000';
+window.addEventListener('message', (event) => {
+    if (event.origin === designer_url) {
+        let received_sdl = JSON.parse(event.data);
+        load_sdl_file(received_sdl);
+        json_editor.set({text: undefined, json: received_sdl});
+        $("#fileViewerFileName").text("- " + "output_sdl_file.mtrk");
+        $("#output-sdl-alert").show();
+    }
 });

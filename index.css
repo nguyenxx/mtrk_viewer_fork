@@ -22,7 +22,7 @@
     font-size: 24px;
 }
 
-#dummy-file-alert{
+#dummy-file-alert, #output-sdl-alert {
     margin-top: 5%;
 }
 
