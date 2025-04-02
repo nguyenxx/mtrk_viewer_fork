@@ -93,7 +93,7 @@ function plot_sequence(data) {
             steps_to_plot[block_name]["steps"].forEach(function (item, index) {
                 if (item["action"] == "rf") {
                     let object_name = item["object"];
-                    let flip_angle = parseInt(data["objects"][object_name]["flipangle"]);
+                    let flip_angle = parseFloat(data["objects"][object_name]["flipangle"]);
                     let start = item["time"]/step_size + rep*array_size;
                     let object = item["object"];
                     for (let i=0; i<rf_even_data.length; i++) {
@@ -105,7 +105,7 @@ function plot_sequence(data) {
                 } else if(item["axis"] == "slice" || item["axis"] == "phase" || item["axis"] == "read") {
                     let start = item["time"]/step_size + rep*array_size;
                     let object = item["object"];
-                    let amplitude = parseInt(data["objects"][object]["amplitude"]);
+                    let amplitude = parseFloat(data["objects"][object]["amplitude"]);
 
                     // Updating the amplitude if available in the step.
                     if ("amplitude" in item) {
@@ -615,7 +615,7 @@ window.addEventListener('load', function() {
     }, 500); // Wait for fade-out effect to complete
 });
 
-var designer_url = 'http://127.0.0.1:5000';
+var designer_url = 'http://127.0.0.1:5010';
 window.addEventListener('message', (event) => {
     if (event.origin === designer_url) {
         let received_sdl = JSON.parse(event.data);
