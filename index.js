@@ -449,11 +449,21 @@ function evaluate_equation(equation, rep) {
 var json_editor = null;
 
 $(document).ready(function() {
-    $("#dummy-file-alert").show();
-    plot_sequence(data);
+    plot_sequence(JSON.parse(JSON.stringify(data)));
+
+    // give the effect of empty plot on load
+    let plot = document.getElementById('chart1');
+    let layout = plot.layout;
+    let empty_data = JSON.parse(JSON.stringify(plot.data));
+    for (let i = 0; i < empty_data.length; i++) {
+        empty_data[i].x = [];
+        empty_data[i].y = [];
+    }
+    Plotly.react(plot, empty_data, layout);
+
     let content = {
         text: undefined,
-        json: data
+        json: {}
     }
     json_editor = createJSONEditor({
         target: document.getElementById('jsonviewer'),
