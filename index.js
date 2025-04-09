@@ -251,7 +251,7 @@ function plot_sequence(data) {
             gridcolor: 'red'
             },
             "gridcolor": "rgba(255,255,255,0.05)",
-            "zerolinecolor": "rgba(255,255,255,0.5)",
+            "zerolinecolor": "rgba(255,255,255,0.2)",
         },
         xaxis2: {
             tickformat: "digits",
@@ -261,7 +261,7 @@ function plot_sequence(data) {
             color : 'rgba(255,255,255,0.9)'
             },
             "gridcolor": "rgba(255,255,255,0.05)",
-            "zerolinecolor": "rgba(255,255,255,0.5)",
+            "zerolinecolor": "rgba(255,255,255,0.2)",
         },
         xaxis3: {
             tickformat: "digits",
@@ -271,7 +271,7 @@ function plot_sequence(data) {
             color : 'rgba(255,255,255,0.9)'
             },
             "gridcolor": "rgba(255,255,255,0.05)",
-            "zerolinecolor": "rgba(255,255,255,0.5)",
+            "zerolinecolor": "rgba(255,255,255,0.2)",
         },
         xaxis4: {
             tickformat: "digits",
@@ -281,7 +281,7 @@ function plot_sequence(data) {
             color : 'rgba(255,255,255,0.9)'
             },
             "gridcolor": "rgba(255,255,255,0.05)",
-            "zerolinecolor": "rgba(255,255,255,0.5)",
+            "zerolinecolor": "rgba(255,255,255,0.2)",
         },
         xaxis5: {
             title: "time (ms)",
@@ -295,7 +295,7 @@ function plot_sequence(data) {
             color : 'rgba(255,255,255,0.9)'
             },
             "gridcolor": "rgba(255,255,255,0.05)",
-            "zerolinecolor": "rgba(255,255,255,0.5)",
+            "zerolinecolor": "rgba(255,255,255,0.2)",
         },
         yaxis1: {
             title: "RF (FA)",
@@ -308,7 +308,7 @@ function plot_sequence(data) {
             color : 'rgba(255,255,255,0.9)'
             },
             "gridcolor": "rgba(255,255,255,0.05)",
-            "zerolinecolor": "rgba(255,255,255,0.5)",
+            "zerolinecolor": "rgba(255,255,255,0.2)",
             fixedrange: true,
         },
         yaxis2: {
@@ -322,7 +322,7 @@ function plot_sequence(data) {
             color : 'rgba(255,255,255,0.9)'
             },
             "gridcolor": "rgba(255,255,255,0.05)",
-            "zerolinecolor": "rgba(255,255,255,0.5)",
+            "zerolinecolor": "rgba(255,255,255,0.2)",
             fixedrange: true,
         },
         yaxis3: {
@@ -336,7 +336,7 @@ function plot_sequence(data) {
             color : 'rgba(255,255,255,0.9)'
             },
             "gridcolor": "rgba(255,255,255,0.05)",
-            "zerolinecolor": "rgba(255,255,255,0.5)",
+            "zerolinecolor": "rgba(255,255,255,0.2)",
             fixedrange: true,
         },
         yaxis4: {
@@ -350,7 +350,7 @@ function plot_sequence(data) {
             color : 'rgba(255,255,255,0.9)'
             },
             "gridcolor": "rgba(255,255,255,0.05)",
-            "zerolinecolor": "rgba(255,255,255,0.5)",
+            "zerolinecolor": "rgba(255,255,255,0.2)",
             fixedrange: true,
         },
         yaxis5: {
@@ -364,7 +364,7 @@ function plot_sequence(data) {
             color : 'rgba(255,255,255,0.9)'
             },
             "gridcolor": "rgba(255,255,255,0.05)",
-            "zerolinecolor": "rgba(255,255,255,0.5)",
+            "zerolinecolor": "rgba(255,255,255,0.2)",
             fixedrange: true,
         },
     };
@@ -589,11 +589,11 @@ function toggle_plot_color(isDark) {
             update[`xaxis${xaxis_number}.titlefont.color`] = "rgba(255,255,255,0.9)";
             update[`xaxis${xaxis_number}.tickfont.color`] = "rgba(255,255,255,0.9)";
             update[`xaxis${xaxis_number}.gridcolor`] = "rgba(255,255,255,0.05)";
-            update[`xaxis${xaxis_number}.zerolinecolor`] = "rgba(255,255,255,0.1)";
+            update[`xaxis${xaxis_number}.zerolinecolor`] = "rgba(255,255,255,0.2)";
             update[`yaxis${xaxis_number}.titlefont.color`] = "rgba(255,255,255,0.9)";
             update[`yaxis${xaxis_number}.tickfont.color`] = "rgba(255,255,255,0.9)";
             update[`yaxis${xaxis_number}.gridcolor`] = "rgba(255,255,255,0.05)";
-            update[`yaxis${xaxis_number}.zerolinecolor`] = "rgba(255,255,255,0.1)";
+            update[`yaxis${xaxis_number}.zerolinecolor`] = "rgba(255,255,255,0.2)";
         }
     }
     Plotly.relayout("chart1", update);
@@ -613,6 +613,7 @@ function load_sdl_file(sdl_data) {
         $("#output-sdl-alert").hide();
     } catch ({ name, message }) {
         $("#alert").show();
+        $("#output-sdl-alert").hide();
         console.log(name, message);
     }
 }
