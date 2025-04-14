@@ -626,9 +626,9 @@ window.addEventListener('load', function() {
     }, 500); // Wait for fade-out effect to complete
 });
 
-var designer_url = 'http://127.0.0.1:5010';
+// var designer_url = 'http://127.0.0.1:5010';
 window.addEventListener('message', (event) => {
-    if (event.origin === designer_url) {
+    if (event.origin.startsWith('http://127.0.0.1')) {
         let received_sdl = JSON.parse(event.data);
         load_sdl_file(received_sdl);
         json_editor.set({text: undefined, json: received_sdl});
