@@ -8,22 +8,28 @@ function dfs_visit_block(block_name, instructions, visited_blocks, steps_to_plot
     let block_data = instructions[block_name];
     let steps = block_data.steps;
     let range = 1;
-    steps_to_plot[block_name] = {"reps": 1, "steps": []};
+    if (!(block_name in steps_to_plot)) {
+        steps_to_plot[block_name] = {"reps": 1, "steps": []};
+    }
 
-    for (let step of steps) {
+    for (let i=0; i < steps.length; i++) {
+        let step = steps[i];
         if (step.action == "run_block") {
             dfs_visit_block(step.block, instructions, visited_blocks, steps_to_plot);
         } else if (step.action == "loop") {
             range = step.range;
-            steps.push.apply(steps, step.steps);
+            steps.splice(i + 1, 0, ...step.steps);
+            // TODO: verify if the loop count will always be valid like this.
+            if ("block" in step.steps[0]) {
+                let repeating_block_name = step.steps[0].block;
+                steps_to_plot[repeating_block_name] = {"reps": range, "steps": []};
+            }
         } else if (step.action == "rf" || step.action == "grad" || step.action == "adc" || step.action == "mark") {
             steps_to_plot[block_name]["steps"].push(step);
         } else if (step.action == "init" || step.action == "sync" || step.action == "calc") {
             // TODO: deal with even actions
         }
     }
-
-    steps_to_plot[block_name]["reps"] = range;
     steps_to_plot[block_name]["steps"].sort((a, b) => a.time - b.time);
 }
 
@@ -32,11 +38,14 @@ function plot_sequence(data) {
     if ("rfpulse" in data["arrays"])  rf_pulse_data = data["arrays"]["rfpulse"]["data"];
     else rf_pulse_data = data["arrays"]["rf_pulse"]["data"];
 
-    const rf_odd_data = []
-    const rf_even_data = []
-    for (let i=0; i < 128; i++) {
-        rf_even_data.push(rf_pulse_data[2*i]);
-        rf_odd_data.push(rf_pulse_data[2*i+1])
+    const rf_odd_data = [];
+    const rf_even_data = [];
+    for (let i=0; i < rf_pulse_data.length; i++) {
+        if (i % 2 == 0) {
+            rf_even_data.push(rf_pulse_data[i]);
+        } else {
+            rf_odd_data.push(rf_pulse_data[i]);
+        }
     }
 
     // Storing the steps that need to be plotted
@@ -54,22 +63,11 @@ function plot_sequence(data) {
     // storing the objects
     const objects = data["objects"];
 
-    // Getting the array size from last step
-    var size;
-    for (let block_name in steps_to_plot) {
-        steps_to_plot[block_name]["steps"].forEach(function (item, index) {
-            if(item["action"] == "mark") {
-                size = item["time"];
-            }
-        });
-    }
-    const array_size = size/step_size;
-
-    const rf_data = [];
-    const slice_data = [];
-    const phase_data = [];
-    const readout_data = [];
-    const adc_data = [];
+    var rf_data = [];
+    var slice_data = [];
+    var phase_data = [];
+    var readout_data = [];
+    var adc_data = [];
 
     var rf_data_x = [];
     var slice_data_x = [];
@@ -79,31 +77,36 @@ function plot_sequence(data) {
 
 
     // Arrays to store object info for hover text
-    const rf_text = [];
-    const slice_text = [];
-    const phase_text = [];
-    const readout_text = [];
-    const adc_text = [];
+    var rf_text = [];
+    var slice_text = [];
+    var phase_text = [];
+    var readout_text = [];
+    var adc_text = [];
 
     // Repeating the steps
     let reps = 1;
+    let block_offset_time = 0;
     for (let block_name in steps_to_plot) {
+        let loop_offset_time = 0;
+        reps = steps_to_plot[block_name]["reps"];
         for (let rep=0; rep<reps; rep++) {
+            let rep_max = 0;
             // Executing each step and filling axis arrays.
             steps_to_plot[block_name]["steps"].forEach(function (item, index) {
                 if (item["action"] == "rf") {
                     let object_name = item["object"];
                     let flip_angle = parseFloat(data["objects"][object_name]["flipangle"]);
-                    let start = item["time"]/step_size + rep*array_size;
+                    let start = item["time"]/step_size;
                     let object = item["object"];
                     for (let i=0; i<rf_even_data.length; i++) {
                         rf_data.push(rf_even_data[i] * flip_angle);
                         rf_text.push(object);
-                        rf_data_x.push(start);
+                        rf_data_x.push(start + block_offset_time + loop_offset_time);
                         start += 2;
                     }
+                    rep_max =  Math.max(rep_max, start - 2);
                 } else if(item["axis"] == "slice" || item["axis"] == "phase" || item["axis"] == "read") {
-                    let start = item["time"]/step_size + rep*array_size;
+                    let start = item["time"]/step_size;
                     let object = item["object"];
                     let amplitude = parseFloat(data["objects"][object]["amplitude"]);
 
@@ -127,39 +130,44 @@ function plot_sequence(data) {
                         if (item["axis"] == "slice") {
                             slice_data.push(array_data[i]);
                             slice_text.push(object);
-                            slice_data_x.push(start);
+                            slice_data_x.push(start + block_offset_time + loop_offset_time);
                         } else if (item["axis"] == "phase") {
                             phase_data.push(array_data[i]);
                             phase_text.push(object);
-                            phase_data_x.push(start);
+                            phase_data_x.push(start + block_offset_time + loop_offset_time);
                         } else if (item["axis"] == "read") {
                             readout_data.push(array_data[i]);
                             readout_text.push(object);
-                            readout_data_x.push(start);
+                            readout_data_x.push(start + block_offset_time + loop_offset_time);
                         }
                         start++;
                     }
+                    rep_max = Math.max(rep_max, start - 1);
                 } else if (item["action"] == "adc") {
-                    let start = item["time"]/step_size + rep*array_size;
+                    let start = item["time"]/step_size;
                     let object = item["object"];
                     let duration = data["objects"][object]["duration"]/step_size;
 
                     adc_data.push(0);
                     adc_text.push(0);
-                    adc_data_x.push(start-1);
+                    adc_data_x.push(start + block_offset_time + loop_offset_time - 1);
                     for (let i=0; i<duration; i++) {
                         adc_data.push(1);
                         adc_text.push(object);
-                        adc_data_x.push(start);
+                        adc_data_x.push(start + block_offset_time + loop_offset_time);
                         start += 1;
                     }
                     adc_data.push(0);
                     adc_text.push(0);
-                    adc_data_x.push(start);
+                    adc_data_x.push(start + block_offset_time + loop_offset_time);
+                    rep_max = Math.max(rep_max, start);
+                } else if (item["action"] == "mark") {
+                    rep_max = Math.max(rep_max, item["time"]/step_size);
                 }
+                loop_offset_time += rep_max;
             });
         }
-        reps = steps_to_plot[block_name]["reps"];
+        block_offset_time += loop_offset_time;
     }
 
     // divide all the x data by 100 to get the time in ms
