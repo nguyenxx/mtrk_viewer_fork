@@ -63,25 +63,25 @@ function plot_sequence(data) {
     // storing the objects
     const objects = data["objects"];
 
-    var rf_data = [];
-    var slice_data = [];
-    var phase_data = [];
-    var readout_data = [];
-    var adc_data = [];
+    var rf_data = [0];
+    var slice_data = [0];
+    var phase_data = [0];
+    var readout_data = [0];
+    var adc_data = [0];
 
-    var rf_data_x = [];
-    var slice_data_x = [];
-    var phase_data_x = [];
-    var readout_data_x = [];
-    var adc_data_x = [];
+    var rf_data_x = [0];
+    var slice_data_x = [0];
+    var phase_data_x = [0];
+    var readout_data_x = [0];
+    var adc_data_x = [0];
 
 
     // Arrays to store object info for hover text
-    var rf_text = [];
-    var slice_text = [];
-    var phase_text = [];
-    var readout_text = [];
-    var adc_text = [];
+    var rf_text = [""];
+    var slice_text = [""];
+    var phase_text = [""];
+    var readout_text = [""];
+    var adc_text = [""];
 
     // Repeating the steps
     let reps = 1;
