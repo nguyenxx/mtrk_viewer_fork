@@ -170,6 +170,33 @@ function plot_sequence(data) {
         block_offset_time += loop_offset_time;
     }
 
+    // remove the (0,0) point if there is no data for the line
+    if (rf_data.length == 1) {
+        rf_data.shift();
+        rf_data_x.shift();
+        rf_text.shift();
+    }
+    if (slice_data.length == 1) {
+        slice_data.shift();
+        slice_data_x.shift();
+        slice_text.shift();
+    }
+    if (phase_data.length == 1) {
+        phase_data.shift();
+        phase_data_x.shift();
+        phase_text.shift();
+    }
+    if (readout_data.length == 1) {
+        readout_data.shift();
+        readout_data_x.shift();
+        readout_text.shift();
+    }
+    if (adc_data.length == 1) {
+        adc_data.shift();
+        adc_data_x.shift();
+        adc_text.shift();
+    }
+
     // divide all the x data by 100 to get the time in ms
     rf_data_x = rf_data_x.map(x => x/100);
     slice_data_x = slice_data_x.map(x => x/100);
