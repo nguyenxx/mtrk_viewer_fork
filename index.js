@@ -491,9 +491,10 @@ $(document).ready(function() {
         reader.readAsText(selectedFile, "UTF-8");
         reader.onload = function(e) {
             let newData = JSON.parse(reader.result);
-            load_sdl_file(newData);
-            json_editor.set({text: undefined, json: newData});
-            $("#fileViewerFileName").text("- " + selectedFile.name);
+            if (load_sdl_file(newData)) {
+                json_editor.set({text: undefined, json: newData});
+                $("#fileViewerFileName").text("- " + selectedFile.name);
+            }
         };
     }
 
@@ -608,6 +609,9 @@ function toggle_plot_color(isDark) {
 }
 
 function load_sdl_file(sdl_data) {
+    $("#alert").hide();
+    $("#dummy-file-alert").hide();
+    $("#output-sdl-alert").hide();
     try {
         plot_sequence(sdl_data);
         if (document.documentElement.getAttribute('data-bs-theme') == 'dark') {
@@ -616,14 +620,12 @@ function load_sdl_file(sdl_data) {
         else {
             toggle_plot_color(true);
         }
-        $("#alert").hide();
-        $("#dummy-file-alert").hide();
-        $("#output-sdl-alert").hide();
     } catch ({ name, message }) {
-        $("#alert").show();
-        $("#output-sdl-alert").hide();
         console.log(name, message);
+        $("#alert").show();
+        return false;
     }
+    return true;
 }
 
 window.addEventListener('load', function() {
@@ -638,9 +640,10 @@ window.addEventListener('load', function() {
 window.addEventListener('message', (event) => {
     if (event.origin.startsWith('http://127.0.0.1')) {
         let received_sdl = JSON.parse(event.data);
-        load_sdl_file(received_sdl);
-        json_editor.set({text: undefined, json: received_sdl});
-        $("#fileViewerFileName").text("- " + "output_sdl_file.mtrk");
-        $("#output-sdl-alert").show();
+        if (load_sdl_file(received_sdl)) {
+            $("#output-sdl-alert").show();
+            json_editor.set({text: undefined, json: received_sdl});
+            $("#fileViewerFileName").text("- " + "output_sdl_file.mtrk");
+        }
     }
 });
