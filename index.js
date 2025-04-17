@@ -164,8 +164,8 @@ function plot_sequence(data) {
                 } else if (item["action"] == "mark") {
                     rep_max = Math.max(rep_max, item["time"]/step_size);
                 }
-                loop_offset_time += rep_max;
             });
+            loop_offset_time += rep_max;
         }
         block_offset_time += loop_offset_time;
     }
