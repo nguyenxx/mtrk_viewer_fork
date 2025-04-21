@@ -170,23 +170,14 @@ function plot_sequence(data) {
         block_offset_time += loop_offset_time;
     }
 
-    // get the max time value out of all the x arrays
-    let max_time = Math.max(
-        Math.max(...rf_data_x),
-        Math.max(...slice_data_x),
-        Math.max(...phase_data_x),
-        Math.max(...readout_data_x),
-        Math.max(...adc_data_x)
-    );
-
-    // remove the (0,0) point if there is no data for the line and add (max_time,0) point if there is.
+    // remove the (0,0) point if there is no data for the line and add (block_offset_time,0) point if there is.
     if (rf_data.length == 1) {
         rf_data.shift();
         rf_data_x.shift();
         rf_text.shift();
     } else {
         rf_data.push(0);
-        rf_data_x.push(max_time);
+        rf_data_x.push(block_offset_time);
         rf_text.push("");
     }
     if (slice_data.length == 1) {
@@ -195,7 +186,7 @@ function plot_sequence(data) {
         slice_text.shift();
     } else {
         slice_data.push(0);
-        slice_data_x.push(max_time);
+        slice_data_x.push(block_offset_time);
         slice_text.push("");
     }
     if (phase_data.length == 1) {
@@ -204,7 +195,7 @@ function plot_sequence(data) {
         phase_text.shift();
     } else {
         phase_data.push(0);
-        phase_data_x.push(max_time);
+        phase_data_x.push(block_offset_time);
         phase_text.push("");
     }
     if (readout_data.length == 1) {
@@ -213,7 +204,7 @@ function plot_sequence(data) {
         readout_text.shift();
     } else {
         readout_data.push(0);
-        readout_data_x.push(max_time);
+        readout_data_x.push(block_offset_time);
         readout_text.push("");
     }
     if (adc_data.length == 1) {
@@ -222,7 +213,7 @@ function plot_sequence(data) {
         adc_text.shift();
     } else {
         adc_data.push(0);
-        adc_data_x.push(max_time);
+        adc_data_x.push(block_offset_time);
         adc_text.push("");
     }
 
