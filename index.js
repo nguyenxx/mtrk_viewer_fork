@@ -307,7 +307,7 @@ function plot_sequence(data) {
         height: window.innerHeight,
         showlegend: false,
         xaxis1: {
-            tickformat: "digits",
+            tickformat: "~",
             "showticklabels": true,
             "matches": "x5",
             tickfont : {
@@ -318,7 +318,7 @@ function plot_sequence(data) {
             "zerolinecolor": "rgba(255,255,255,0.2)",
         },
         xaxis2: {
-            tickformat: "digits",
+            tickformat: "~",
             "showticklabels": true,
             "matches": "x5",
             tickfont : {
@@ -328,7 +328,7 @@ function plot_sequence(data) {
             "zerolinecolor": "rgba(255,255,255,0.2)",
         },
         xaxis3: {
-            tickformat: "digits",
+            tickformat: "~",
             "showticklabels": true,
             "matches": "x5",
             tickfont : {
@@ -338,7 +338,7 @@ function plot_sequence(data) {
             "zerolinecolor": "rgba(255,255,255,0.2)",
         },
         xaxis4: {
-            tickformat: "digits",
+            tickformat: "~",
             "showticklabels": true,
             "matches": "x5",
             tickfont : {
@@ -348,13 +348,15 @@ function plot_sequence(data) {
             "zerolinecolor": "rgba(255,255,255,0.2)",
         },
         xaxis5: {
-            title: "time (ms)",
-            titlefont: {
-                family: 'Arial, sans-serif',
-                size: 12,
-                color: 'rgba(255,255,255,0.9)'
+            title: {
+                text: "time (ms)",
+                font: {
+                    family: 'Arial, sans-serif',
+                    size: 12,
+                    color: 'rgba(255,255,255,0.9)'
+                }
             },
-            tickformat: "digits",
+            tickformat: "~",
             tickfont : {
             color : 'rgba(255,255,255,0.9)'
             },
@@ -362,11 +364,13 @@ function plot_sequence(data) {
             "zerolinecolor": "rgba(255,255,255,0.2)",
         },
         yaxis1: {
-            title: "RF (FA)",
-            titlefont: {
-                family: 'Arial, sans-serif',
-                size: 12,
-                color: 'rgba(255,255,255,0.9)'
+            title: {
+                text: "RF (FA)",
+                font: {
+                    family: 'Arial, sans-serif',
+                    size: 12,
+                    color: 'rgba(255,255,255,0.9)'
+                }
             },
             tickfont : {
             color : 'rgba(255,255,255,0.9)'
@@ -376,11 +380,13 @@ function plot_sequence(data) {
             fixedrange: true,
         },
         yaxis2: {
-            title: "Slice (mT/m)",
-            titlefont: {
-                family: 'Arial, sans-serif',
-                size: 12,
-                color: 'rgba(255,255,255,0.9)'
+            title: {
+                text: "Slice (mT/m)",
+                font: {
+                    family: 'Arial, sans-serif',
+                    size: 12,
+                    color: 'rgba(255,255,255,0.9)'
+                }
             },
             tickfont : {
             color : 'rgba(255,255,255,0.9)'
@@ -390,11 +396,13 @@ function plot_sequence(data) {
             fixedrange: true,
         },
         yaxis3: {
-            title: "Phase (mT/m)",
-            titlefont: {
-                family: 'Arial, sans-serif',
-                size: 12,
-                color: 'rgba(255,255,255,0.9)'
+            title: {
+                text: "Phase (mT/m)",
+                font: {
+                    family: 'Arial, sans-serif',
+                    size: 12,
+                    color: 'rgba(255,255,255,0.9)'
+                }
             },
             tickfont : {
             color : 'rgba(255,255,255,0.9)'
@@ -404,11 +412,13 @@ function plot_sequence(data) {
             fixedrange: true,
         },
         yaxis4: {
-            title: "Readout (mT/m)",
-            titlefont: {
-                family: 'Arial, sans-serif',
-                size: 12,
-                color: 'rgba(255,255,255,0.9)'
+            title: {
+                text: "Readout (mT/m)",
+                font: {
+                    family: 'Arial, sans-serif',
+                    size: 12,
+                    color: 'rgba(255,255,255,0.9)'
+                }
             },
             tickfont : {
             color : 'rgba(255,255,255,0.9)'
@@ -418,11 +428,13 @@ function plot_sequence(data) {
             fixedrange: true,
         },
         yaxis5: {
-            title: "ADC (on/off)",
-            titlefont: {
-                family: 'Arial, sans-serif',
-                size: 12,
-                color: 'rgba(255,255,255,0.9)'
+            title: {
+                text: "ADC (on/off)",
+                font: {
+                    family: 'Arial, sans-serif',
+                    size: 12,
+                    color: 'rgba(255,255,255,0.9)'
+                }
             },
             tickfont : {
             color : 'rgba(255,255,255,0.9)'
@@ -431,6 +443,7 @@ function plot_sequence(data) {
             "zerolinecolor": "rgba(255,255,255,0.2)",
             fixedrange: true,
         },
+        hovermode: "x",
     };
 
     const config = {
