@@ -8,8 +8,9 @@ function dfs_visit_block(block_name, instructions, visited_blocks, steps_to_plot
     let block_data = instructions[block_name];
     let steps = block_data.steps;
     let range = 1;
+    let counter = 0;
     if (!(block_name in steps_to_plot)) {
-        steps_to_plot[block_name] = {"reps": 1, "steps": []};
+        steps_to_plot[block_name] = {"counter": 0, "reps": 1, "steps": []};
     }
 
     for (let i=0; i < steps.length; i++) {
@@ -18,12 +19,13 @@ function dfs_visit_block(block_name, instructions, visited_blocks, steps_to_plot
             dfs_visit_block(step.block, instructions, visited_blocks, steps_to_plot);
             steps_to_plot[block_name]["steps"].push(step);
         } else if (step.action == "loop") {
+            counter = step.counter;
             range = step.range;
             steps.splice(i + 1, 0, ...step.steps);
             // TODO: verify if the loop count will always be valid like this.
             if ("block" in step.steps[0]) {
                 let repeating_block_name = step.steps[0].block;
-                steps_to_plot[repeating_block_name] = {"reps": range, "steps": []};
+                steps_to_plot[repeating_block_name] = {"counter": counter, "reps": range, "steps": []};
             }
         } else if (step.action == "rf" || step.action == "grad" || step.action == "adc" || step.action == "mark" || step.action == "submit") {
             steps_to_plot[block_name]["steps"].push(step);
@@ -87,7 +89,7 @@ function plot_sequence(data) {
     let running_time = 0;
     let rep_max = 0;
     // To be used for equation amplitude
-    let rep_number = 0;
+    var counter_to_rep = {};
     let steps = [];
     if ("main" in steps_to_plot) {
         steps = steps_to_plot["main"]["steps"];
@@ -100,11 +102,14 @@ function plot_sequence(data) {
         if (item["action"] == "run_block") {
             let block_name = item["block"];
             if (block_name in steps_to_plot) {
+                let counter = steps_to_plot[block_name]["counter"];
                 let reps = steps_to_plot[block_name]["reps"];
                 let block_steps = steps_to_plot[block_name]["steps"];
-                rep_number = 0;
+                counter_to_rep[counter] = reps;
                 for (let rep=0; rep<reps; rep++) {
-                    steps.splice(0, 0, ...block_steps);
+                    let block_steps_copy = JSON.parse(JSON.stringify(block_steps));
+                    block_steps_copy[block_steps_copy.length - 1]["counter"] = counter;
+                    steps.splice(0, 0, ...block_steps_copy);
                 }
             }
         }
@@ -133,7 +138,7 @@ function plot_sequence(data) {
                 else if ("equation" in item["amplitude"]) {
                     var equation_name = item["amplitude"]["equation"]
                     var equation = data["equations"][equation_name]["equation"];
-                    amplitude = evaluate_equation(equation, rep_number);
+                    amplitude = evaluate_equation(equation, counter_to_rep);
                     data["objects"][object]["amplitude"] = amplitude;
                 }
             }
@@ -181,7 +186,10 @@ function plot_sequence(data) {
         } else if (item["action"] == "submit") {
             running_time += rep_max;
             rep_max = 0;
-            rep_number++;
+            let counter = item["counter"];
+            if (counter > 0) {
+                counter_to_rep[counter] -= 1;
+            }
         }
     }
 
@@ -508,10 +516,10 @@ function plot_sequence(data) {
     });
 }
 
-function evaluate_equation(equation, rep) {
+function evaluate_equation(equation, counter_to_rep) {
     // To replace ctr(1) with the current rep value.
-    function ctr() {
-        return rep;
+    function ctr(counter_number) {
+        return counter_to_rep[counter_number];
     }
 
     // If existing, it will replace the substring.
