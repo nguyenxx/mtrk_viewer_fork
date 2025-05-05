@@ -658,11 +658,11 @@ function toggle_plot_color(isDark) {
             if (i == 0) {
                 xaxis_number = "";
             }
-            update[`xaxis${xaxis_number}.titlefont.color`] = "rgba(0,0,0,0.9)";
+            update[`xaxis${xaxis_number}.title.font.color`] = "rgba(0,0,0,0.9)";
             update[`xaxis${xaxis_number}.tickfont.color`] = "rgba(0,0,0,0.9)";
             update[`xaxis${xaxis_number}.gridcolor`] = "rgba(0,0,0,0.05)";
             update[`xaxis${xaxis_number}.zerolinecolor`] = "rgba(0,0,0,0.2)";
-            update[`yaxis${xaxis_number}.titlefont.color`] = "rgba(0,0,0,0.9)";
+            update[`yaxis${xaxis_number}.title.font.color`] = "rgba(0,0,0,0.9)";
             update[`yaxis${xaxis_number}.tickfont.color`] = "rgba(0,0,0,0.9)";
             update[`yaxis${xaxis_number}.gridcolor`] = "rgba(0,0,0,0.05)";
             update[`yaxis${xaxis_number}.zerolinecolor`] = "rgba(0,0,0,0.2)";
@@ -678,11 +678,11 @@ function toggle_plot_color(isDark) {
             if (i == 0) {
                 xaxis_number = "";
             }
-            update[`xaxis${xaxis_number}.titlefont.color`] = "rgba(255,255,255,0.9)";
+            update[`xaxis${xaxis_number}.title.font.color`] = "rgba(255,255,255,0.9)";
             update[`xaxis${xaxis_number}.tickfont.color`] = "rgba(255,255,255,0.9)";
             update[`xaxis${xaxis_number}.gridcolor`] = "rgba(255,255,255,0.05)";
             update[`xaxis${xaxis_number}.zerolinecolor`] = "rgba(255,255,255,0.2)";
-            update[`yaxis${xaxis_number}.titlefont.color`] = "rgba(255,255,255,0.9)";
+            update[`yaxis${xaxis_number}.title.font.color`] = "rgba(255,255,255,0.9)";
             update[`yaxis${xaxis_number}.tickfont.color`] = "rgba(255,255,255,0.9)";
             update[`yaxis${xaxis_number}.gridcolor`] = "rgba(255,255,255,0.05)";
             update[`yaxis${xaxis_number}.zerolinecolor`] = "rgba(255,255,255,0.2)";
