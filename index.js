@@ -99,6 +99,22 @@ function plot_sequence(data) {
 
     while (steps.length > 0) {
         let item = steps.shift();
+
+        if (typeof item.time === 'object' && item.time.type === "equation") {
+            let equation_name = item.time.equation;
+            if (!(equation_name in data["equations"])) {
+                console.log("Equation " + equation_name + " not found in equations.");
+                return;
+            }
+            let equation = data["equations"][equation_name].equation;
+            let equation_result = evaluate_equation(equation, counter_to_rep, data["settings"]);
+            if (equation_result === null) {
+                console.log("Error evaluating equation: " + equation);
+                return;
+            }
+            item.time = equation_result;
+        }
+
         if (item["action"] == "run_block") {
             let block_name = item["block"];
             if (block_name in steps_to_plot) {
@@ -138,7 +154,7 @@ function plot_sequence(data) {
                 else if ("equation" in item["amplitude"]) {
                     var equation_name = item["amplitude"]["equation"]
                     var equation = data["equations"][equation_name]["equation"];
-                    amplitude = evaluate_equation(equation, counter_to_rep);
+                    amplitude = evaluate_equation(equation, counter_to_rep, data["settings"]);
                     data["objects"][object]["amplitude"] = amplitude;
                 }
             }
@@ -516,11 +532,23 @@ function plot_sequence(data) {
     });
 }
 
-function evaluate_equation(equation, counter_to_rep) {
+function evaluate_equation(equation, counter_to_rep, settings) {
     // To replace ctr(1) with the current rep value.
     function ctr(counter_number) {
         return counter_to_rep[counter_number];
     }
+
+    // To replace set(parameter) with parameter value from settings.
+    function set(parameter) {
+        if (parameter in settings) {
+            return settings[parameter];
+        } else {
+            console.log("Parameter " + parameter + " not found in settings.");
+        }
+    }
+
+     // To add quotation marks around the parameter names in the equation.
+     equation = equation.replace(/set\((\w+)\)/g, "set('$1')");
 
     // If existing, it will replace the substring.
     // We can add support for more functions accordingly.
