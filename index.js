@@ -1,11 +1,11 @@
 import data from "./miniflash.json" with { type: 'json' };
 import { createJSONEditor } from 'https://cdn.jsdelivr.net/npm/vanilla-jsoneditor/standalone.js'
 
-function dfs_visit_block(block_name, instructions, visited_blocks, steps_to_plot) {
+function dfs_visit_block(block_name, visited_blocks, steps_to_plot, data) {
     if (block_name in visited_blocks) return;
     visited_blocks[block_name] = true;
 
-    let block_data = instructions[block_name];
+    let block_data = data["instructions"][block_name];
     let steps = block_data.steps;
     let range = 1;
     let counter = 0;
@@ -15,8 +15,22 @@ function dfs_visit_block(block_name, instructions, visited_blocks, steps_to_plot
 
     for (let i=0; i < steps.length; i++) {
         let step = steps[i];
+        if (typeof step.time === 'object' && step.time.type === "equation") {
+            let equation_name = step.time.equation;
+            if (!(equation_name in data["equations"])) {
+                console.log("Equation " + equation_name + " not found in equations.");
+                return;
+            }
+            let equation = data["equations"][equation_name].equation;
+            let equation_result = evaluate_equation(equation, {}, data["settings"]);
+            if (equation_result === null) {
+                console.log("Error evaluating equation: " + equation);
+                return;
+            }
+            step.time = equation_result;
+        }
         if (step.action == "run_block") {
-            dfs_visit_block(step.block, instructions, visited_blocks, steps_to_plot);
+            dfs_visit_block(step.block, visited_blocks, steps_to_plot, data);
             steps_to_plot[block_name]["steps"].push(step);
         } else if (step.action == "loop") {
             counter = step.counter;
@@ -56,7 +70,7 @@ function plot_sequence(data) {
     var steps_to_plot = {};
     var instructions = JSON.parse(JSON.stringify(data["instructions"]));
     for (let block_name in instructions) {
-        dfs_visit_block(block_name, instructions, visited_blocks, steps_to_plot);
+        dfs_visit_block(block_name, visited_blocks, steps_to_plot, data);
         visited_blocks[block_name] = true;
     }
 
@@ -99,22 +113,6 @@ function plot_sequence(data) {
 
     while (steps.length > 0) {
         let item = steps.shift();
-
-        if (typeof item.time === 'object' && item.time.type === "equation") {
-            let equation_name = item.time.equation;
-            if (!(equation_name in data["equations"])) {
-                console.log("Equation " + equation_name + " not found in equations.");
-                return;
-            }
-            let equation = data["equations"][equation_name].equation;
-            let equation_result = evaluate_equation(equation, counter_to_rep, data["settings"]);
-            if (equation_result === null) {
-                console.log("Error evaluating equation: " + equation);
-                return;
-            }
-            item.time = equation_result;
-        }
-
         if (item["action"] == "run_block") {
             let block_name = item["block"];
             if (block_name in steps_to_plot) {
