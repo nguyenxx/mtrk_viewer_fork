@@ -66,7 +66,7 @@
 }
 
 #flexSwitchCheckChecked:focus {
-    box-shadow: 0 0 0 0.25rem rgba(57, 0, 99, 0.25);
+    box-shadow: none;
     border-color: #390063;
 }
 
