@@ -326,13 +326,14 @@ function plot_sequence(data) {
         },
         margin: {
             t: 20,
-            b: 40,
+            b: 60,
             // r: 15,
             // l: 60
         },
         plot_bgcolor:"rgba(0,0,0,0.1)",
         paper_bgcolor:"rgba(0,0,0,0.6)",
-        height: window.innerHeight,
+        // height: window.innerHeight - 2,
+        height: $("#plot-col").height(),
         showlegend: false,
         xaxis1: {
             tickformat: "~",
@@ -486,7 +487,8 @@ function plot_sequence(data) {
     // If the size of window is changed, we update the layout!
     window.onresize = function() {
         var update = {
-            "height": window.innerHeight,
+            autosize: true,
+            "height": $("#plot-col").height(),
             "width": $("#chart1").width(),
         }
         Plotly.relayout(myPlot, update);
@@ -620,6 +622,8 @@ $(document).ready(function() {
             update_theme("light");
         }
     });
+
+    update_theme("light");
 });
 
 // Check whether shift button is pressed
@@ -649,7 +653,7 @@ function update_theme(toTheme) {
         });
         $("body").css('background', "#f8fafc");
         toggle_plot_color(true);
-        $("#plot-col").css({'background': "#ffffff", 'border-left': "1px solid #dfe2e6", 'border-right': "1px solid #dfe2e6"});
+        $("#plot-col").css({'background': "#ffffff", 'border-top': "1px solid #dfe2e6", 'border-bottom': "1px solid #dfe2e6", 'border-left': "1px solid #dfe2e6", 'border-right': "1px solid #dfe2e6"});
         $("#mtrk-logo").hide();
         $("#mtrk-logo-dark").show();
         $("#mtrk-logo").removeClass("d-inline-block");
